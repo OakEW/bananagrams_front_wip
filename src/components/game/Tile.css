@@ -5,9 +5,12 @@
   border-radius: 10%;
   background-color: #ffbb12;
 
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   color: #1d1d1b;
-  font-size: 30px;
+  font-size: 22px;
   font-family: typewriter;
   font-weight: 900;
   white-space: nowrap;
