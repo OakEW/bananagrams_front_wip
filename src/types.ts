@@ -10,7 +10,6 @@ export interface User {
   id: string;   // generated once
   name: string; // userName or Guest_${sessionId.slice(0, 4)}
   isBot: boolean;
-  // isMyself: boolean;
   tray: PlacedTile[];
   board: PlacedTile[];
 }

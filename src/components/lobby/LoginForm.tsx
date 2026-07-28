@@ -31,23 +31,27 @@ export default function LoginForm({
 
     // loging error msg testing
     if (!inputUserName) {
-       setLoginMsg(`error: invalid username`);
+      console.log("login fail : invalid username");
+      setLoginMsg(`error: invalid username`);
       return;
     }
     if (inputUserName === "ywang2" && inputPassWord !== "12345") {
-      setLoginMsg(`user: ${inputUserName} password wrong`);
+      console.log("login fail : wrong password");
+      setLoginMsg(`user: ${inputUserName} wrong password`);
       return;
     }
 
     setUserName(inputUserName);
     setPassWord(inputPassWord);
     setIsLogin(true);
+    console.log("login success");
     // clear the input boxes
     setInputUserName("");
     setInputPassWord("");
   }
 
   function handleLogout() {
+    console.log("logout success");
     setLoginMsg("");
     setUserName("");
     setPassWord("");

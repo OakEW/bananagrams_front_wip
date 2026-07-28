@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import type { Room, User } from "../../types";
 import RoomButton from "./RoomButton";
 import RoomKeyBox from "./RoomKeyBox";
+// bunch init
+import { initRoomBunch } from "../game/bunch"
 
 interface RoomListProps {
   rooms: Room[];
@@ -42,7 +44,7 @@ export default function RoomList({
   if (room.users.length === 6 && !room.active) return; // can't join a full room
 
   if (room.active) {
-    // Resuming an already-active room: no pc change at all.
+    // Resuming an already-active room
     console.log("resuming room:", room.id);
     onEnterRoom(room);
     return;
@@ -57,6 +59,8 @@ export default function RoomList({
   if (botEnabled && wasEmpty) {
     newUsers.push({ id: "0000", name: "Bot", isBot: true, tray: [], board: [] });
     }
+  else
+    console.log("join room:", room.id);
 
   const updatedRoom: Room = {
     ...room,
@@ -65,6 +69,12 @@ export default function RoomList({
     users: [...room.users, ...newUsers],
     ...(wasEmpty ? { peelEnabled, botEnabled, level, key, creator: displayName } : {}),
   };
+  if (wasEmpty) {
+    console.log("create room:", updatedRoom.id);
+    if (updatedRoom.priv)
+      console.log("create room key:", updatedRoom.key);
+    initRoomBunch(updatedRoom);
+  }
   setRooms((prev) => prev.map((r) => (r.id === room.id ? updatedRoom : r)));
   onEnterRoom(updatedRoom); // pass the freshly build room
 }

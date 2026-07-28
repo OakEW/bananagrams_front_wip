@@ -14,10 +14,10 @@ import type { Room } from "./types";
 const initialRooms: Room[] = [
   { id: 1, priv: false, active: false, name: "Solo",        key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1, users: [], bunch: []},
   { id: 2, priv: false, active: false, name: "Cavendish",   key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1 , users: [], bunch: []},
-  { id: 3, priv: false, active: false, name: "Plantain",    key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1 , users: [], bunch: [1]},
-  { id: 4, priv: false, active: false, name: "Goldfinger",  key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1 , users: [], bunch: [1]},
-  { id: 5, priv: false, active: false, name: "Manzano",     key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1 , users: [], bunch: [2]},
-  { id: 6, priv: false, active: false, name: "Gros_Michel", key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1 , users: [], bunch: [12]},
+  { id: 3, priv: false, active: false, name: "Plantain",    key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1 , users: [], bunch: []},
+  { id: 4, priv: false, active: false, name: "Goldfinger",  key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1 , users: [], bunch: []},
+  { id: 5, priv: false, active: false, name: "Manzano",     key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1 , users: [], bunch: []},
+  { id: 6, priv: false, active: false, name: "Gros_Michel", key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1 , users: [], bunch: []},
 ];
 
 // setting default : peelEnabled, botEnabled
@@ -39,6 +39,7 @@ export default function App() {
 
   // quit room
   function quitRoom(roomId:number) {
+    console.log("destroy room:", roomId);
     setRooms((prev) =>
     prev.map((r) => {
       if(r.id !== roomId) return r;
@@ -56,14 +57,18 @@ export default function App() {
         active: false,
         users: newUsers,
         ...(isNowEmpty || isBotOnly 
-            ? { peelEnabled: false, botEnabled: false, level: 1, priv: false, key: "", pc : 0, users: []} 
+            ? { peelEnabled: false, botEnabled: false, level: 1, priv: false, key: "", users: [], bunch: []} 
             : {}),
       };
     })
   );
   setCurrentRoomId(null);
   }
+  function backToLobby() {
+    console.log("return to lobby");
+    setCurrentRoomId(null);
 
+  } 
   return (
     <div className="background">
       <Leaderboard />
@@ -110,7 +115,7 @@ export default function App() {
         <GameRoom
           room={currentRoom}
           sessionId={sessionId}
-          onBack={() => setCurrentRoomId(null)}
+          onBack={backToLobby}
           onQuit={() => quitRoom(currentRoom.id)}
         />
       )}

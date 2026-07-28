@@ -35,19 +35,6 @@ const animationClick = (e: React.MouseEvent<HTMLElement>) => {
   el.classList.add("anim-click");
 };
 
-// tile for testing
-const testBoardTiles: PlacedTile[] = [
-  { x: 0, y: 0, letter: "t" },
-  { x: 1, y: 1, letter: "e" },
-  { x: 12, y: 6, letter: "s" },
-  { x: 29, y: 16, letter: "t" },
-];
-const testTrayTiles: PlacedTile[] = [
-  { x: 0, y: 0, letter: "t" },
-  { x: 1, y: 0, letter: "e" },
-  { x: 5, y: 0, letter: "s" },
-  { x: 21, y: 0, letter: "t" },
-];
 
 interface GameProps {
   room: Room;
@@ -57,6 +44,21 @@ interface GameProps {
 export default function Game({ room, sessionId }: GameProps) {
   const currentUser = room.users.find((u) => u.id === sessionId);
   // testing tiles 
+  // tile need to be added in react method
+// also need a function to init room.bunch
+// tile for testing
+  const testBoardTiles: PlacedTile[] = [
+    { x: 0, y: 0, letter: room.bunch[0] },
+    { x: 1, y: 1, letter: room.bunch[1] },
+    { x: 12, y: 6, letter: room.bunch[2] },
+    { x: 29, y: 16, letter: room.bunch[3] },
+  ];
+  const testTrayTiles: PlacedTile[] = [
+    { x: 0, y: 0, letter: room.bunch[4] },
+    { x: 1, y: 0, letter: room.bunch[5] },
+    { x: 5, y: 0, letter: room.bunch[6] },
+    { x: 21, y: 0, letter: room.bunch[7] },
+  ];
   if (currentUser) {
     if (currentUser.board.length === 0) {
       currentUser.board.push(...testBoardTiles);
