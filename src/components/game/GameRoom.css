@@ -1,0 +1,22 @@
+.back {
+  position: absolute;
+  left: 30px;
+  top: 15px;
+  width: 60px;
+  height: 60px;
+  background-color: #eddebd;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.close {
+  position: absolute;
+  left: 65px;
+  top: 55px;
+  width: 60px;
+  height: 60px;
+  background-color: red;
+  border-radius: 50%;
+  cursor: pointer;
+}
+

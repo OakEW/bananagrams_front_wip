@@ -1,0 +1,96 @@
+.board {
+  position: absolute;
+  width: 1240px;
+  height: 720px;
+  top: 130px;
+  left: 30px;
+  z-index: 1;
+  background-image: url("assets_game/board.svg");
+}
+
+.tray {
+  position: absolute;
+  width: 910px;
+  height: 72px;
+  top: 42px;
+  left: 150px;
+  border-radius: 12px;
+  z-index: 1;
+  background-color: #422e05;
+  /* background-image: url("assets_game/tray.svg"); */
+}
+
+.roomHeader {
+  position: absolute;
+  top: 0px;
+  /* left: 151px; */
+  color: #ffbb12;
+  font-size: 20px;
+  font-family: "typewriter";
+  font-weight: 900;
+}
+
+.bananabtn {
+  position: absolute;
+  right: 30px;
+  top: -30px;
+  width: 288px;
+  height: 144px;
+  border: none;
+  outline: none;
+  appearance: none;
+  background-image: url("assets_game/bananabttn.svg");
+  background-size: cover;
+  background-position: center;
+  /* border-radius: 50%; */
+  background-color: transparent;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.peelbtn {
+  position: absolute;
+  right: 30px;
+  top: -30px;
+  width: 135px;
+  height: 144px;
+  border: none;
+  outline: none;
+  appearance: none;
+  background-image: url("assets_game/peelbttn.svg");
+  background-size: cover;
+  background-position: center;
+  /* border-radius: 50%; */
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.dumpbtn {
+  position: absolute;
+  right: 185px;
+  top: -30px;
+  width: 135px;
+  height: 144px;
+  border: none;
+  outline: none;
+  appearance: none;
+  background-image: url("assets_game/dumpbttn.svg");
+  background-size: cover;
+  background-position: center;
+  background-color: transparent;
+  /* border-radius: 50%; */
+  /* cursor: pointer; */
+}
+
+.user {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  right: 36px;
+  border-radius: 50%;
+  z-index: 5;
+  background-color: #ffbb12;
+  /* background-image: url("assets_users/default.png"); */
+  object-fit: cover;
+}
+

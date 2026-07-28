@@ -1,0 +1,472 @@
+/* z-index: rule
+  elements in lobby < 100
+    bg            0 - 19
+    setting/btn  20 - 49
+    login        50 - 59
+    leaderboard        60 - 69
+    room list    70
+
+  chat elements 900 - 1000
+  game rooms 200 - 800
+*/
+/* colors
+#ffbb12 yellow
+#106a51 light green
+#043020 dark green
+#1d1d1b dark
+#eddebd light
+#422e05 brown
+*/
+
+/* FONT */
+@font-face {
+  font-family: 'typewriter';
+  src: url('assets_font/ELEGANT_TYPEWRITER_Bold.ttf') format('truetype');
+  font-weight: 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'typewriter';
+  src: url('assets_font/ELEGANT_TYPEWRITER_Light.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+}
+
+/* BG CONTAINER */
+.background {
+  width: 1400px;
+  height: 900px;
+  position: absolute;
+  background: #106a51;
+  overflow: hidden;
+}
+
+/* BG elements*/
+.banana {
+  position: absolute;
+  width: 700px;
+  left: 350px;
+  top: 180px;
+}
+.leaf_l1 {
+  position: absolute;
+  width: 290px;
+  left: -70px;
+  top: 430px;
+}
+.leaf_l2 {
+  position: absolute;
+  width: 480px;
+  left: -140px;
+  top: 530px;
+}
+.leaf_r1 {
+  position: absolute;
+  width: 550px;
+  left: 1000px;
+  top: 440px;
+}
+.leaf_r2 {
+  position: absolute;
+  width: 770px;
+  left: 850px;
+  top: 620px;
+}
+.bg_l {
+  position: absolute;
+  height: 900px;
+  left: 208px;
+  top: 0px;
+}
+.bg_r {
+  position: absolute;
+  height: 900px;
+  left: 1230px;
+  top: 0px;
+}
+
+/* TEXT */
+.msg {
+  position: absolute;
+  left: 49%;
+  transform: translateX(-50%);
+  top: 610px;
+  text-align: center;
+  color: #ffbb12;
+  font-size: 16px;
+  font-family: typewriter;
+  font-weight: 400;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+/* setting elements */
+.settings {
+  width: 50px;
+  height: 230px;
+  position: absolute;
+  left: 1315px;
+  top: 80px;
+  z-index: 20;
+}
+
+.peel {
+  position: absolute;
+  width: 50px;
+  top: 0px;
+  border-radius: 50%;
+  background-color: #1d1d1b;
+  cursor: pointer;
+}
+
+.bot {
+  position: absolute;
+  width: 50px;
+  top: 60px;
+  cursor: pointer;
+}
+
+.lv {
+  position: absolute;
+  width: 50px;
+  top: 106px;
+  cursor: pointer;
+}
+
+/* leaderboard */
+.star {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  left: 25px;
+  top: 80px;
+  z-index: 30;
+  cursor: pointer;
+  border-radius: 50%;
+  background-image: url("assets_leaderboard/lead.svg");
+  background-size: cover;
+  background-position: center;
+  background-color: #1d1d1b;
+}
+
+/* user icon msg */
+.user_img {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  left: 1300px;
+  top: 780px;
+  border-radius: 50%;
+  background-color: #ffbb12;
+  /* background-image: url("assets_users/defult.png");
+  background-size: cover;
+  background-position: center; */
+  cursor: pointer;
+  z-index: 900;
+}
+.user_img img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #ffbb12;
+}
+
+.popup_lead {
+  position: absolute;
+  top: 80px;
+  left: 25px;
+  width: 280px;
+  min-height: 200px;
+  max-height: 460px;
+  background: #1d1d1b;
+  border-radius: 25px;
+  padding: 16px;
+  box-sizing: border-box;
+  font-family: 'typewriter', sans-serif;
+  font-weight: 900;
+  z-index: 60;
+}
+
+.popup_lead .close {
+  position: absolute;
+  top: 18px;
+  left: 16px;
+  width: 18px;
+  height: 18px;
+  border-radius: 0%;
+  background: none;
+  border: none;
+  background-image: url("assets_leaderboard/mini2.svg");
+  background-size: cover;
+  background-position: center;
+  background-color: #1d1d1b;
+  cursor: pointer;
+}
+
+.popup_chat {
+  position: absolute;
+  bottom: 50px;
+  right: 30px;
+  width: 380px;
+  height: 500px;
+  background: #1d1d1b;
+  border-radius: 25px;
+  padding: 16px;
+  box-sizing: border-box;
+  font-family: 'typewriter', sans-serif;
+  font-weight: 900;
+  z-index: 910;
+}
+.popup_chat .close {
+  position: absolute;
+  top: 18px;
+  left: 16px;
+  width: 18px;
+  height: 18px;
+  border-radius: 0%;
+  background: none;
+  border: none;
+  background-image: url("assets_chat/mini.svg");
+  background-size: cover;
+  background-position: center;
+  background-color: #1d1d1b;
+  cursor: pointer;
+}
+.popup_chat .user {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #1d1d1b;
+  overflow: hidden;
+}
+
+.popup_chat .user img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #1d1d1b;
+}
+
+.room_solo {
+  width: 70px;
+  height: 70px;
+  border-radius: 35px;
+  border: none;
+  outline: none;
+  padding: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("assets_home/solo.svg");
+  background-position: center;
+  background-color: #422e05;
+  cursor: pointer;
+}
+
+.room_muti {
+  width: 70px;
+  height: 70px;
+  border-radius: 35px;
+  border: none;
+  outline: none;
+  padding: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: #422e05;
+  font-family: 'typewriter', sans-serif;
+  font-weight: 400;
+  font-size: 36px;
+  text-align: center;
+  color: #ffbb12;
+  cursor: pointer;
+}
+
+.room_key {
+  height: 26px;
+  width: 90px;
+  background: #eddebd;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+  padding: 0;
+  appearance: none;
+  font-family: 'typewriter', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  text-align: center;
+}
+
+.room_enter {
+  height: 26px;
+  width: 90px;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+  padding: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  background: #ffbb12;
+  font-family: 'typewriter', sans-serif;
+  font-weight: 900;
+  font-size: 14px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.room_lock {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  right: 0px;
+  top: 0px;
+  border-radius: 50%;
+  background-color: red;
+}
+
+.room_peel {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  left: 0px;
+  top: 0px;
+  border-radius: 50%;
+  background-color: #1d1d1b;
+}
+
+.room_lv {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  left: 24px;
+  top: -8px;
+  border-radius: 50%;
+  background-color: #1d1d1b;
+}
+
+.new_msg_dot {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: red;
+  border-radius: 50%;
+  outline: 4px solid #043020;
+  top: 2px;
+  right: 2px;
+}
+
+.text_box {
+  height: 40px;
+  background: #eddebd;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+  padding: 0;
+  appearance: none;
+  font-family: 'typewriter', sans-serif;
+  font-weight: 400;
+  font-size: 22px;
+  padding-left: 20px;
+}
+
+.button_go {
+  width: 80px;
+  height: 40px;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+  padding: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: #ffbb12;
+  font-family: 'typewriter', sans-serif;
+  font-weight: 900;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.welcome {
+  width: 360px;
+  height: 80px;
+  background: #eddebd;
+  border-radius: 40px;
+  position: absolute;
+  left: 500px;
+  top: 500px;
+  z-index: 55;
+
+  font-family: 'typewriter', sans-serif;
+  font-weight: 400;
+  font-size: 26px;
+  padding-left: 20px;
+}
+
+.welcome .quit-btn {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 60px;
+  height: 60px;
+  background-color: #ffbb12;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* ANIMATION Keyframes */
+@keyframes fadeInLeft {
+  0% { opacity: 0; transform: translateX(-80%) translateY(-80px); }
+  100% { opacity: 1; transform: translateX(-50%) translateY(0px); }
+}
+@keyframes fadeInRight {
+  0% { opacity: 0; transform: translateX(-20%) translateY(-80px); }
+  100% { opacity: 1; transform: translateX(-50%) translateY(0px); }
+}
+@keyframes extentToRight {
+  0% { opacity: 0; transform: translateX(-150px) translateY(-250px); }
+  100% { opacity: 1; transform: translateX(0) translateY(0px); }
+}
+@keyframes popPop {
+  0% { opacity: 0; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.05); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes popPopB {
+  0% { opacity: 1; transform: scale(1); }
+  30% { opacity: 1; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.05); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes rotate {
+  0% { opacity: 1; transform: rotateY(46deg); }
+  33% { opacity: 1; transform: rotateY(0deg); }
+  66% { opacity: 1; transform: rotateZ(12deg); }
+  80% { opacity: 1; transform: rotateZ(-3deg); }
+  90% { opacity: 1; transform: rotateZ(2deg); }
+  100% { opacity: 1; transform: rotateZ(0deg); }
+}
+@keyframes rotateR {
+  0% { opacity: 1; transform: rotateY(46deg); }
+  33% { opacity: 1; transform: rotateY(0deg); }
+  66% { opacity: 1; transform: rotateZ(-12deg); }
+  80% { opacity: 1; transform: rotateZ(3deg); }
+  90% { opacity: 1; transform: rotateZ(-2deg); }
+  100% { opacity: 1; transform: rotateZ(0deg); }
+}
+@keyframes wobble {
+  0% {}
+  50% { transform: rotateZ(9deg); }
+  70% { transform: rotateZ(-4deg); }
+  80% { transform: rotateZ(2deg); }
+  90% { transform: rotateZ(-1deg); }
+  100% { transform: rotateZ(0deg); }
+}
+
+.anim-wobble { animation: wobble 0.8s forwards; }
+.anim-fadeinLeft { opacity: 0; animation: fadeInLeft 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+.anim-fadeinRight { opacity: 0; animation: fadeInRight 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+.anim-extentToRight { opacity: 0; animation: extentToRight 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+.anim-poppop { opacity: 0; animation: popPop 0.2s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+.anim-poppop-b { opacity: 1; animation: popPopB 0.2s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+.anim-rotate { opacity: 0; animation: rotate 0.8s forwards; }
+.anim-rotate-r { opacity: 0; animation: rotateR 0.8s forwards; }

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 25.4.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 150 160" style="enable-background:new 0 0 150 160;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#EDDEBD;}
+	.st1{fill:#CCB992;}
+	.st2{fill:#E80022;}
+	.st3{font-family:'ELEGANTTYPEWRITER-Bold';}
+	.st4{font-size:29.1713px;}
+	.st5{fill:#422E05;}
+	.st6{fill:none;stroke:#E80022;stroke-width:2;stroke-linecap:round;stroke-miterlimit:10;}
+	.st7{fill:#77603F;}
+</style>
+<path class="st0" d="M75,160L75,160c-41.4,0-75-41.4-75-92.3V0h150v67.7C150,118.6,116.4,160,75,160z"/>
+<path class="st0" d="M0,31.5h150l0,0v72.4c0,31-25.1,56.1-56.1,56.1H56.1C25.1,159.9,0,134.8,0,103.8l0,0V31.5L0,31.5z"/>
+<path class="st1" d="M35.4,44.8h79.2c14.6,0,26.4,11.8,26.4,26.4l0,0v30.7c0,27.8-22.5,50.3-50.3,50.3l0,0H59.3
+	C31.6,152.2,9,129.7,9,101.9l0,0V71.1C9,56.6,20.8,44.8,35.4,44.8z"/>
+<text transform="matrix(1 0 0 1 41.6016 132.2014)" class="st2 st3 st4">D</text>
+<text transform="matrix(1 0 0 1 59.48 132.2014)" class="st2 st3 st4">UMP</text>
+<g>
+	<path class="st5" d="M65.7,70.5h18.6c2.2,0,4.1,1.8,4.1,4.1v18.6c0,2.2-1.8,4.1-4.1,4.1H65.7c-2.2,0-4.1-1.8-4.1-4.1V74.5
+		C61.7,72.3,63.5,70.5,65.7,70.5z"/>
+	<line class="st6" x1="71.1" y1="83.8" x2="79" y2="83.8"/>
+	<line class="st6" x1="75" y1="79.9" x2="75" y2="87.8"/>
+</g>
+<g>
+	<path class="st5" d="M99.3,70.5h18.6c2.2,0,4.1,1.8,4.1,4.1v18.6c0,2.2-1.8,4.1-4.1,4.1H99.3c-2.2,0-4.1-1.8-4.1-4.1V74.5
+		C95.2,72.3,97,70.5,99.3,70.5z"/>
+	<line class="st6" x1="104.6" y1="83.8" x2="112.5" y2="83.8"/>
+	<line class="st6" x1="108.6" y1="79.9" x2="108.6" y2="87.8"/>
+</g>
+<path class="st7" d="M32.1,70.5h18.6c2.2,0,4.1,1.8,4.1,4.1v18.6c0,2.2-1.8,4.1-4.1,4.1H32.1c-2.2,0-4.1-1.8-4.1-4.1V74.5
+	C28,72.3,29.8,70.5,32.1,70.5z"/>
+<path class="st6" d="M46.2,85.8c-0.8,1.9-2.6,3.2-4.8,3.2c-2.9,0-5.2-2.3-5.2-5.2s2.3-5.2,5.2-5.2c1.4,0,2.6,0.5,3.6,1.4"/>
+<polygon class="st2" points="42.9,81.6 47,82.3 46.3,78 "/>
+</svg>
