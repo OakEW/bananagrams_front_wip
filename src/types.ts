@@ -7,8 +7,8 @@ export interface PlacedTile {
 
 // user data
 export interface User {
-  id: string; // generated once and match to name if a user login
-  name: string;
+  id: string;   // generated once
+  name: string; // userName or Guest_${sessionId.slice(0, 4)}
   isBot: boolean;
   // isMyself: boolean;
   tray: PlacedTile[];
@@ -21,6 +21,7 @@ export interface Room {
   // pc: number;       // 0 - 6 player count. bot count // as 1 now users[]handle this
   priv: boolean;    // priv: whether the room is password protected (shows a lock icon).
   active: boolean;  // active: whether the current user has a game running in this room.
+  // ** need to remove this, use find id instead
   name: string;     // room name
   key: string;      // room key
   creator: string;  // room creator username
@@ -29,6 +30,6 @@ export interface Room {
   botEnabled: boolean;
   level: number;
 
-  users: User[];
+  users: User[]; // max 6 users bot count as 1
   bunch: string[];
 }

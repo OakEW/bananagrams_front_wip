@@ -94,3 +94,23 @@
   object-fit: cover;
 }
 
+
+@keyframes pop {
+   0% { opacity: 1; transform: scale(1); }
+  15% { opacity: 1; transform: scale(1.02); }
+  20% { opacity: 1; transform: scale(0.99); }
+  35% { opacity: 1; transform: scale(1); }
+  65% { opacity: 1; transform: scale(1); }
+  80% { opacity: 1; transform: scale(1.02); }
+  85% { opacity: 1; transform: scale(0.99); }
+  90% { opacity: 1; transform: scale(1); }
+}
+.anim-pop { animation: pop 0.8s forwards; }
+
+@keyframes click {
+   0% { opacity: 1; transform: scale(1); }
+  30% { opacity: 1; transform: scale(0.97); }
+  40% { opacity: 1; transform: scale(1.02); }
+  70% { opacity: 1; transform: scale(1); }
+}
+.anim-click { animation: click 0.4s forwards; }

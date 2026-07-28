@@ -14,9 +14,9 @@ import type { Room } from "./types";
 const initialRooms: Room[] = [
   { id: 1, priv: false, active: false, name: "Solo",        key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1, users: [], bunch: []},
   { id: 2, priv: false, active: false, name: "Cavendish",   key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1 , users: [], bunch: []},
-  { id: 3, priv: false, active: false, name: "Plantain",    key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1 , users: [], bunch: []},
-  { id: 4, priv: false, active: false, name: "Goldfinger",  key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1 , users: [], bunch: []},
-  { id: 5, priv: false, active: false, name: "Manzano",     key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1 , users: [], bunch: []},
+  { id: 3, priv: false, active: false, name: "Plantain",    key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1 , users: [], bunch: [1]},
+  { id: 4, priv: false, active: false, name: "Goldfinger",  key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1 , users: [], bunch: [1]},
+  { id: 5, priv: false, active: false, name: "Manzano",     key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1 , users: [], bunch: [2]},
   { id: 6, priv: false, active: false, name: "Gros_Michel", key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1 , users: [], bunch: [12]},
 ];
 
@@ -33,7 +33,7 @@ export default function App() {
   // generated user.id
   const [sessionId] = useState(() => crypto.randomUUID());
   // Rooms
- const [rooms, setRooms] = useState<Room[]>(initialRooms);
+  const [rooms, setRooms] = useState<Room[]>(initialRooms);
   const [currentRoomId, setCurrentRoomId] = useState<number | null>(null);
   const currentRoom = rooms.find((r) => r.id === currentRoomId) ?? null;
 
