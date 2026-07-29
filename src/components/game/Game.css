@@ -101,6 +101,29 @@
   font-weight: 900;
   /* white-space: nowrap; */
 }
+.confirmbtn {
+  position: absolute;
+  left: 36%;
+  top: 38%;
+  width: 360px;
+  height: 144px;
+  border: none;
+  outline: none;
+  appearance: none;
+  /* background-color: #ffbb12 */
+  background-image: url("assets_game/you_win.svg"); 
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+  border-radius: 40px;
+  cursor: pointer;
+  z-index: 50;
+
+  font-size: 28px;
+  font-family: typewriter;
+  font-weight: 900;
+  /* white-space: nowrap; */
+}
 
 .trayOverflow {
   position: absolute;

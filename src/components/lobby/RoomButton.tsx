@@ -7,13 +7,13 @@ interface RoomButtonProps {
 
 export default function RoomButton({ room, onSelect }: RoomButtonProps) {
   const isSolo = room.id === 1;
-  const isFull = room.users.length === 6;
+  const allNowReady = room.users.length > 0 && room.users.every((u) => u.isReady);
 
   let label = "";
   let style: React.CSSProperties = {};
   if (!isSolo) {
-    if (isFull) {
-      label = "×";
+    if (allNowReady) {
+      label = "···";
       style = { background: "#353535", color: "#757575" };
     } else if (room.users.length === 6) {
       label = "f";

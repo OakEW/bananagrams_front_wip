@@ -7,6 +7,7 @@ interface GameRoomProps {
   sessionId: string;
   onBack: () => void;
   onQuit: () => void;
+  onWin: () => void;
   onSetUserReady: (ready: boolean) => void;
   onPeel: () => void;
 }
@@ -16,6 +17,7 @@ export default function GameRoom({
   sessionId,
   onBack,
   onQuit,
+  onWin,
   onSetUserReady,
   onPeel,
 }: GameRoomProps) {
@@ -49,6 +51,7 @@ export default function GameRoom({
       room={room}
       sessionId={sessionId}
       onSetUserReady={onSetUserReady}
+      onWin={onWin}
       onPeel={onPeel}
     />
 

@@ -58,18 +58,31 @@ export default function App() {
         ...r,
         users: newUsers,
         ...(isNowEmpty || isBotOnly 
-            ? { peelEnabled: false, botEnabled: false, level: 1, priv: false, key: "", users: [], bunch: []} 
+            ? { peelEnabled: false, botEnabled: false, level: 1, priv: false, key: "",creator: "", users: [], bunch: []} 
             : {}),
       };
-    })
-  );
-  setCurrentRoomId(null);
+    }));
+    setCurrentRoomId(null);
+  }
+
+  // full reset room
+  function resetRoom(roomId: number) {
+    console.log("room:", roomId, "game finished");
+    setRooms((prev) =>
+      prev.map((r) => {
+        if (r.id !== roomId) return r;
+
+        return {
+          ...r,
+          peelEnabled: false, botEnabled: false, level: 1, priv: false, key: "",creator: "", users: [], bunch: []};
+      })
+    );
+    setCurrentRoomId(null);
   }
 
   function backToLobby() {
-    console.log("return to lobby");
-    setCurrentRoomId(null);
-
+      console.log("return to lobby");
+      setCurrentRoomId(null);
   }
 
     // init tile count
@@ -89,7 +102,7 @@ export default function App() {
         const allNowReady = updatedUsers.length > 0 && updatedUsers.every((u) => u.isReady);
         const alreadyDealt = updatedUsers.some((u) => u.tray.length > 0);
 
-        // deal tiles exactly once, the moment everyone is ready
+        // deal tiles once at the moment everyone is ready
         if (allNowReady && !alreadyDealt) {
           const bunch = [...r.bunch];
           const count = tilesPerPlayer(updatedUsers.length);
@@ -185,6 +198,7 @@ export default function App() {
           sessionId={sessionId}
           onBack={backToLobby}
           onQuit={() => quitRoom(currentRoom.id)}
+          onWin={() => resetRoom(currentRoom.id)}
           onSetUserReady={(ready: boolean) => setUserReady(currentRoom.id, sessionId, ready)}
           onPeel={() => peelForAll(currentRoom.id)}
         />

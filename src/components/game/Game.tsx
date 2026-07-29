@@ -1,7 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./Game.css";
 import Tile from "./Tile";
-import type { Room, PlacedTile } from "../../types";
+import type { Room } from "../../types";
 
 // board matrix
 // border size : 15px
@@ -17,6 +17,7 @@ interface GameProps {
   room: Room;
   sessionId:string;
   onSetUserReady: (ready: boolean) => void;
+  onWin: () =>void;
   onPeel: () => void;
 }
 
@@ -44,7 +45,8 @@ const animationClick = (e: React.MouseEvent<HTMLElement>) => {
   el.classList.add("anim-click");
 };
 
-export default function Game({ room, sessionId, onSetUserReady, onPeel}: GameProps) {
+export default function Game({ room, sessionId, onSetUserReady, onWin, onPeel}: GameProps) {
+  const [showConfirm, setShowConfirm] = useState(false);
   const currentUser = room.users.find((u) => u.id === sessionId);
   const allReady = room.users.length > 0 && room.users.every((u) => u.isReady);
   function onStartGame(e: React.MouseEvent<HTMLElement>) {
@@ -59,7 +61,13 @@ export default function Game({ room, sessionId, onSetUserReady, onPeel}: GamePro
     animationClick(e);
     onPeel();
   }
+  function HandleBanana(e: React.MouseEvent<HTMLElement>) {
+    animationClick(e);
+    setShowConfirm(true);
+  }
 
+  // replace with a function to check if this user can call banana
+  const bananaEnable = currentUser?.tray.length === 0 
   return (
     <>
       {allReady 
@@ -83,19 +91,21 @@ export default function Game({ room, sessionId, onSetUserReady, onPeel}: GamePro
           {room.bunch.length === 0 
             ? <button ref={bananaRef} className="bananabtn anim-pop"
                 style={{
-                  backgroundImage: currentUser?.tray.length === 0 
+                  backgroundImage: bananaEnable
                     ? "url('assets_game/bananabttn.svg')"
                     : "url('assets_game/bananabttn0.svg')",
-                  cursor: currentUser?.tray.length === 0 
+                  cursor: bananaEnable
                   ? "pointer" 
                   : "not-allowed",
                 }} 
-                onClick={animationClick} /> 
+                onClick={bananaEnable ? HandleBanana : undefined} /> 
             : <> 
                 <button className="peelbtn anim-show" onClick={handlePeel}/>
                 <button className="dumpbtn anim-show" onClick={animationClick} /> 
               </>
           }
+          {showConfirm && 
+            (<button className="confirmbtn anim-pop" onClick={onWin}></button>)}
         </>
       ) 
       : (
