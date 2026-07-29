@@ -9,15 +9,17 @@ import BgDecor from "./components/lobby/BgDecor";
 import GameRoom from "./components/game/GameRoom";
 // rooms
 import type { Room } from "./types";
+// tile type
+import type { PlacedTile } from "./types";
 
 // init rooms from this list
 const initialRooms: Room[] = [
-  { id: 1, priv: false, active: false, name: "Solo",        key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1, users: [], bunch: []},
-  { id: 2, priv: false, active: false, name: "Cavendish",   key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1 , users: [], bunch: []},
-  { id: 3, priv: false, active: false, name: "Plantain",    key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1 , users: [], bunch: []},
-  { id: 4, priv: false, active: false, name: "Goldfinger",  key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1 , users: [], bunch: []},
-  { id: 5, priv: false, active: false, name: "Manzano",     key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1 , users: [], bunch: []},
-  { id: 6, priv: false, active: false, name: "Gros_Michel", key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1 , users: [], bunch: []},
+  { id: 1, priv: false, name: "Solo",        key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1, users: [], bunch: []},
+  { id: 2, priv: false, name: "Cavendish",   key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1, users: [], bunch: []},
+  { id: 3, priv: false, name: "Plantain",    key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1, users: [], bunch: []},
+  { id: 4, priv: false, name: "Goldfinger",  key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1, users: [], bunch: []},
+  { id: 5, priv: false, name: "Manzano",     key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1, users: [], bunch: []},
+  { id: 6, priv: false, name: "Gros_Michel", key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1, users: [], bunch: []},
 ];
 
 // setting default : peelEnabled, botEnabled
@@ -54,7 +56,6 @@ export default function App() {
 
       return {
         ...r,
-        active: false,
         users: newUsers,
         ...(isNowEmpty || isBotOnly 
             ? { peelEnabled: false, botEnabled: false, level: 1, priv: false, key: "", users: [], bunch: []} 
@@ -64,11 +65,78 @@ export default function App() {
   );
   setCurrentRoomId(null);
   }
+
   function backToLobby() {
     console.log("return to lobby");
     setCurrentRoomId(null);
 
-  } 
+  }
+
+    // init tile count
+  function tilesPerPlayer(pc: number): number {
+    if (pc <= 4) return 21;
+    else return 15;
+  }
+  function setUserReady(roomId: number, sessionId: string, ready: boolean) {
+    setRooms((prev) =>
+      prev.map((r) => {
+        if (r.id !== roomId) return r;
+
+        const updatedUsers = r.users.map((u) =>
+          u.id === sessionId ? { ...u, isReady: ready } : u
+        );
+
+        const allNowReady = updatedUsers.length > 0 && updatedUsers.every((u) => u.isReady);
+        const alreadyDealt = updatedUsers.some((u) => u.tray.length > 0);
+
+        // deal tiles exactly once, the moment everyone is ready
+        if (allNowReady && !alreadyDealt) {
+          const bunch = [...r.bunch];
+          const count = tilesPerPlayer(updatedUsers.length);
+
+          const dealtUsers = updatedUsers.map((u) => {
+            const drawn = bunch.splice(0, count); // take `count` letters off the top
+            const tray: PlacedTile[] = drawn.map((letter, i) => ({
+              x: i,
+              y: 0,
+              letter,
+            }));
+            return { ...u, tray };
+          });
+
+          return { ...r, users: dealtUsers, bunch };
+        }
+
+        return { ...r, users: updatedUsers };
+      })
+    );
+  }
+  // peel button
+  function peelForAll(roomId: number) {
+  setRooms((prev) =>
+    prev.map((r) => {
+      if (r.id !== roomId) return r;
+      if (r.bunch.length === 0) return r; // nothing left to peel
+
+      const bunch = [...r.bunch];
+
+      const updatedUsers = r.users.map((u) => {
+        const letter = bunch.shift(); // take the next letter off the top
+        if (!letter) return u; // bunch ran out mid-loop, leave this user as-is
+
+        const newTile: PlacedTile = {
+          x: u.tray.length, // append to the end of their tray
+          y: 0,
+          letter,
+        };
+        return { ...u, tray: [...u.tray, newTile] };
+      });
+
+      return { ...r, users: updatedUsers, bunch };
+    })
+  );
+}
+
   return (
     <div className="background">
       <Leaderboard />
@@ -117,6 +185,8 @@ export default function App() {
           sessionId={sessionId}
           onBack={backToLobby}
           onQuit={() => quitRoom(currentRoom.id)}
+          onSetUserReady={(ready: boolean) => setUserReady(currentRoom.id, sessionId, ready)}
+          onPeel={() => peelForAll(currentRoom.id)}
         />
       )}
     </div>

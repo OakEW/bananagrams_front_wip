@@ -41,9 +41,10 @@ export default function RoomList({
 
   // Called when "Let's go" / "Resume" is clicked.
   function joinRoom(room: Room, key: string) {
-  if (room.users.length === 6 && !room.active) return; // can't join a full room
+  const isUserInRoom = room.users.some((u) => u.id === sessionId);
+  if (room.users.length === 6 && !isUserInRoom) return; // can't join a full room
 
-  if (room.active) {
+  if (isUserInRoom) {
     // Resuming an already-active room
     console.log("resuming room:", room.id);
     onEnterRoom(room);
@@ -54,23 +55,25 @@ export default function RoomList({
   const displayName = userName || `Guest_${sessionId.slice(0, 4)}`;
   // build the new user(s) joining
   const newUsers: User[] = [
-    { id: sessionId, name: displayName, isBot: false, tray: [], board: [] },
+    { id: sessionId, name: displayName, isBot: false, tray: [], board: [], isReady: false},
   ];
   if (botEnabled && wasEmpty) {
-    newUsers.push({ id: "0000", name: "Bot", isBot: true, tray: [], board: [] });
-    }
-  else
+    newUsers.push({ id: "0000", name: "Bot", isBot: true, tray: [], board: [], isReady: true});
+  }
+
+  if (wasEmpty) {
+    console.log("create room:", room.id);
+  } else {
     console.log("join room:", room.id);
+  }
 
   const updatedRoom: Room = {
     ...room,
     priv: wasEmpty && key !== "" ? true : room.priv,
-    active: true,
     users: [...room.users, ...newUsers],
     ...(wasEmpty ? { peelEnabled, botEnabled, level, key, creator: displayName } : {}),
   };
   if (wasEmpty) {
-    console.log("create room:", updatedRoom.id);
     if (updatedRoom.priv)
       console.log("create room key:", updatedRoom.key);
     initRoomBunch(updatedRoom);
@@ -96,6 +99,7 @@ export default function RoomList({
       <RoomKeyBox 
         selectedRoom={selectedRoom} 
         onJoin={joinRoom} 
+        sessionId={sessionId}
       />
     </>
   );

@@ -7,6 +7,8 @@ interface GameRoomProps {
   sessionId: string;
   onBack: () => void;
   onQuit: () => void;
+  onSetUserReady: (ready: boolean) => void;
+  onPeel: () => void;
 }
 
 export default function GameRoom({
@@ -14,6 +16,8 @@ export default function GameRoom({
   sessionId,
   onBack,
   onQuit,
+  onSetUserReady,
+  onPeel,
 }: GameRoomProps) {
   return (
   // BG
@@ -44,6 +48,8 @@ export default function GameRoom({
     <Game 
       room={room}
       sessionId={sessionId}
+      onSetUserReady={onSetUserReady}
+      onPeel={onPeel}
     />
 
     {/* BG decor */}

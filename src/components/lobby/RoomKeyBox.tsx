@@ -4,11 +4,13 @@ import type { Room } from "../../types";
 interface RoomKeyBoxProps {
   selectedRoom: Room | null;
   onJoin: (room: Room, key: string) => void;
+  sessionId: string;
 }
 
 export default function RoomKeyBox({ 
   selectedRoom, 
-  onJoin, 
+  onJoin,
+  sessionId,
 }: RoomKeyBoxProps) {
 
   const [roomKey, setRoomKey] = useState("");
@@ -16,8 +18,9 @@ export default function RoomKeyBox({
   if (!selectedRoom) return null; // display: none
 
   const isSolo = selectedRoom.id === 1;
-  const showKeyInput = !isSolo && selectedRoom.active === false;
-  const cantJoin = selectedRoom.users.length === 6 && !selectedRoom.active;
+  const isUserInRoom = selectedRoom.users.some((u) => u.id === sessionId);
+  const showKeyInput = !isSolo && !isUserInRoom;
+  const cantJoin = selectedRoom.users.length === 6 && !isUserInRoom;
 
   let enterLabel = "Let's go";
   let enterStyle: React.CSSProperties = {
@@ -26,7 +29,7 @@ export default function RoomKeyBox({
     cursor: "pointer",
     fontWeight: 900,
   };
-  if (selectedRoom.active) {
+  if (isUserInRoom) {
     enterLabel = "Resume";
   } else if (cantJoin) {
     enterLabel = "Can't join";
@@ -49,7 +52,7 @@ export default function RoomKeyBox({
         gap: 6,
         position: "absolute",
         left: (selectedRoom.id - 1) * 100 + 40,
-        top: !isSolo && !selectedRoom.active ? 710 : 742,
+        top: !isSolo && !isUserInRoom ? 710 : 742,
         zIndex: 50,
       }}
     >

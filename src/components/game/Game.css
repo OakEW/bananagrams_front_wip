@@ -82,6 +82,50 @@
   /* cursor: pointer; */
 }
 
+.startbtn {
+  position: absolute;
+  left: 36%;
+  top: 38%;
+  width: 300px;
+  height: 120px;
+  border: none;
+  outline: none;
+  appearance: none;
+  background-color: #ffbb12;
+  border-radius: 40px;
+  cursor: pointer;
+  z-index: 10;
+
+  font-size: 28px;
+  font-family: typewriter;
+  font-weight: 900;
+  /* white-space: nowrap; */
+}
+
+.trayOverflow {
+  position: absolute;
+  right: 16px;
+  top: -16px;
+  width: 80px;
+  height: 22px;
+  border: none;
+  outline: none;
+  appearance: none;
+  background-color: #ffbb12;
+  border-radius: 3px;
+  z-index: 10;
+  color:#422e05;
+  font-size: 16px;
+  font-family: typewriter;
+  font-weight: 900;
+  white-space: nowrap;
+  cursor: default;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .user {
   position: absolute;
   width: 60px;
@@ -92,6 +136,7 @@
   background-color: #ffbb12;
   /* background-image: url("assets_users/default.png"); */
   object-fit: cover;
+  cursor: pointer;
 }
 
 
@@ -114,3 +159,9 @@
   70% { opacity: 1; transform: scale(1); }
 }
 .anim-click { animation: click 0.4s forwards; }
+
+@keyframes show {
+  0% { opacity: 0; transform: scale(0.6); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.anim-show {animation: show 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards; }

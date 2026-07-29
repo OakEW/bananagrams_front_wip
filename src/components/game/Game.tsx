@@ -13,12 +13,21 @@ import type { Room, PlacedTile } from "../../types";
 // tray size 0-21 : 0 (22 * 1)
 
 // banna button pop | running in the background
+interface GameProps {
+  room: Room;
+  sessionId:string;
+  onSetUserReady: (ready: boolean) => void;
+  onPeel: () => void;
+}
+
+// animation restarter
 function animationLoop(ref: React.RefObject<HTMLElement | null>) {
   useEffect(() => {
     const id = setInterval(() => {
       const el = ref.current;
       if (!el) return;
       el.classList.remove("anim-pop");
+      el.classList.remove("anim-click");
       void el.offsetWidth; // force reflow
       el.classList.add("anim-pop");
     }, 8000);
@@ -26,60 +35,81 @@ function animationLoop(ref: React.RefObject<HTMLElement | null>) {
     return () => clearInterval(id);
   }, [ref]);
 }
-// el click animation
 const animationClick = (e: React.MouseEvent<HTMLElement>) => {
   const el = e.currentTarget;
   if (!el) return;
+  el.classList.remove("anim-show");
   el.classList.remove("anim-click");
   void el.offsetWidth;
   el.classList.add("anim-click");
 };
 
-
-interface GameProps {
-  room: Room;
-  sessionId:string;
-}
-
-export default function Game({ room, sessionId }: GameProps) {
+export default function Game({ room, sessionId, onSetUserReady, onPeel}: GameProps) {
   const currentUser = room.users.find((u) => u.id === sessionId);
-  // testing tiles 
-  // tile need to be added in react method
-// also need a function to init room.bunch
-// tile for testing
-  const testBoardTiles: PlacedTile[] = [
-    { x: 0, y: 0, letter: room.bunch[0] },
-    { x: 1, y: 1, letter: room.bunch[1] },
-    { x: 12, y: 6, letter: room.bunch[2] },
-    { x: 29, y: 16, letter: room.bunch[3] },
-  ];
-  const testTrayTiles: PlacedTile[] = [
-    { x: 0, y: 0, letter: room.bunch[4] },
-    { x: 1, y: 0, letter: room.bunch[5] },
-    { x: 5, y: 0, letter: room.bunch[6] },
-    { x: 21, y: 0, letter: room.bunch[7] },
-  ];
-  if (currentUser) {
-    if (currentUser.board.length === 0) {
-      currentUser.board.push(...testBoardTiles);
-    }
-    if (currentUser.tray.length === 0) {
-      currentUser.tray.push(...testTrayTiles);
-    }
+  const allReady = room.users.length > 0 && room.users.every((u) => u.isReady);
+  function onStartGame(e: React.MouseEvent<HTMLElement>) {
+    animationClick(e);
+    onSetUserReady(true);
+
   }
   const bananaRef = useRef<HTMLButtonElement>(null);
   animationLoop(bananaRef);
 
+  function handlePeel(e: React.MouseEvent<HTMLElement>) {
+    animationClick(e);
+    onPeel();
+  }
+
   return (
     <>
-    {/* board area */}
-      <div className="board">
-        {currentUser?.board.map((t, i) => (
-          <Tile key={i} x={t.x} y={t.y} letter={t.letter} />
-        ))}
-      </div>
+      {allReady 
+      ? (
+        <>
+          <div className="board anim-show">
+            {currentUser?.board.map((t, i) => (
+              <Tile key={i} x={t.x} y={t.y} letter={t.letter} />
+            ))}
+          </div>
+          <div className="tray anim-show">
+            {currentUser?.tray.slice(0, 22).map((t, i) => (
+              <Tile key={i} x={t.x} y={t.y} letter={t.letter} />
+            ))}
+            {currentUser && currentUser.tray.length > 22 && (
+              <div className="trayOverflow">
+                +{currentUser.tray.length - 22} more
+              </div>)}
+          </div>
+          {/* banana button or peel + dump button*/}
+          {room.bunch.length === 0 
+            ? <button ref={bananaRef} className="bananabtn anim-pop"
+                style={{
+                  backgroundImage: currentUser?.tray.length === 0 
+                    ? "url('assets_game/bananabttn.svg')"
+                    : "url('assets_game/bananabttn0.svg')",
+                  cursor: currentUser?.tray.length === 0 
+                  ? "pointer" 
+                  : "not-allowed",
+                }} 
+                onClick={animationClick} /> 
+            : <> 
+                <button className="peelbtn anim-show" onClick={handlePeel}/>
+                <button className="dumpbtn anim-show" onClick={animationClick} /> 
+              </>
+          }
+        </>
+      ) 
+      : (
+        <button className="startbtn anim-pop" 
+        style={currentUser?.isReady
+            ? { background: "#1d1d1b", color: "#eddebd", cursor: "wait" }
+            : undefined
+        }
+        onClick={onStartGame}>
+          {currentUser?.isReady ? "Waiting for others..." : "Start Game"}
+        </button>
+      )}
 
-      {/* tray area */}
+      {/* room header */}
       <h1 className="roomHeader" style={{left: 151}} > 
         Room: {room.name} 
         {room.priv && 
@@ -88,21 +118,6 @@ export default function Game({ room, sessionId }: GameProps) {
           </span>
         }
       </h1>
-      <h1 className="roomHeader" style={{right: 340}} > @ {currentUser?.name}</h1>
-
-      <div className="tray">
-        {currentUser?.tray.map((t, i) => (
-          <Tile key={i} x={t.x} y={t.y} letter={t.letter} />
-        ))}
-      </div>
-
-      {/* banana button or peel + dump button*/}
-      {room.bunch.length === 0 
-        ? <button ref={bananaRef} className="bananabtn anim-pop" /> 
-        : <> 
-            <button className="peelbtn" onClick={animationClick}/>
-            <button className="dumpbtn" onClick={animationClick} /> 
-          </>}
 
       {/* user area */}
       {room.users.map((user, index) => (

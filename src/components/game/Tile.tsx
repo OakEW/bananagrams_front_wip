@@ -12,7 +12,7 @@ const OFFSET = 16; // border (15) + centering (1) + 16
 export default function Tile ({ x, y, letter }: TileProps) {
   return (
     <div
-      className="tile"
+      className="tile anim-tile-deal"
       style={{
         left: OFFSET + x * CELL_SIZE,
         top: OFFSET + y * CELL_SIZE,

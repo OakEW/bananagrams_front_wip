@@ -7,7 +7,7 @@ interface RoomButtonProps {
 
 export default function RoomButton({ room, onSelect }: RoomButtonProps) {
   const isSolo = room.id === 1;
-  const isFull = room.users.length === 6 && !room.active;
+  const isFull = room.users.length === 6;
 
   let label = "";
   let style: React.CSSProperties = {};
@@ -36,7 +36,7 @@ export default function RoomButton({ room, onSelect }: RoomButtonProps) {
       <div
         className="room_text"
         style={{
-          color: room.active ? "#ffbb12" : "#eddebd",
+          color: room.users.length > 0 ? "#ffbb12" : "#eddebd",
           fontFamily: "'typewriter', sans-serif",
           fontWeight: 900,
           textAlign: "center",
