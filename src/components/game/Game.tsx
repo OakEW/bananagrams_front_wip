@@ -121,7 +121,13 @@ export default function Game({
               </>
           }
           {showConfirm && 
-            (<button className="confirmbtn anim-pop" onClick={onWin}></button>)}
+            (<>
+              <button className="confirmbtn anim-show" onClick={onWin}></button>
+              <div className="confirmbtn_text anim-wobble" style={{animationDelay : "0.55s"}} onClick={onWin}></div>
+              <div className="confirmbtn_left anim-wobble" style={{animationDelay : "0.3s"}} onClick={onWin}></div>
+              <div className="confirmbtn_right anim-wobble" style={{animationDelay : "0.4s"}} onClick={onWin}></div>
+            </>
+            )}
         </>
       ) 
       : (

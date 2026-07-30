@@ -104,10 +104,11 @@
 }
 .confirmbtn {
   position: absolute;
-  left: 36%;
-  top: 38%;
+  left: 33%;
+  top: 39%;
   width: 360px;
   height: 144px;
+  scale : 120%;
   border: none;
   outline: none;
   appearance: none;
@@ -116,6 +117,7 @@
   background-repeat: no-repeat;
   background-position: center;
   background-size: 100% 100%;
+  background-color: transparent;
   border-radius: 40px;
   cursor: pointer;
   z-index: 50;
@@ -124,6 +126,69 @@
   font-family: typewriter;
   font-weight: 900;
   /* white-space: nowrap; */
+}
+.confirmbtn_text {
+  opacity: 0;
+  position: absolute;
+  left: 39%;
+  top: 41%;
+  width: 200px;
+  height: 100px;
+  scale : 120%;
+  border: none;
+  outline: none;
+  appearance: none;
+
+  background-image: url("assets_game/you_win_1.svg"); 
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+  background-color: transparent;
+  border-radius: 0px;
+  cursor: pointer;
+  z-index: 52;
+}
+.confirmbtn_left {
+  opacity: 0;
+  position: absolute;
+  left: 28%;
+  top: 46%;
+  width: 200px;
+  height: 100px;
+  scale : 126%;
+  border: none;
+  outline: none;
+  appearance: none;
+
+  background-image: url("assets_game/you_win_2.svg"); 
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+  background-color: transparent;
+  border-radius: 0px;
+  cursor: pointer;
+  z-index: 55;
+}
+.confirmbtn_right {
+  opacity: 0;
+  position: absolute;
+  left: 47.6%;
+  top: 34%;
+  width: 200px;
+  height: 120px;
+  scale : 148%;
+  border: none;
+  outline: none;
+  appearance: none;
+
+  background-image: url("assets_game/you_win_3.svg"); 
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+  background-color: transparent;
+  border-radius: 0px;
+  cursor: pointer;
+  z-index: 55;
 }
 
 .trayOverflow {
@@ -189,3 +254,13 @@
   100% { opacity: 1; transform: scale(1); }
 }
 .anim-show {animation: show 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+
+@keyframes wobble {
+  0% {opacity: 1}
+  50% { opacity: 1; transform: rotateZ(9deg); }
+  70% { opacity: 1; transform: rotateZ(-4deg); }
+  80% { opacity: 1; transform: rotateZ(2deg); }
+  90% { opacity: 1; transform: rotateZ(-1deg); }
+  100% { opacity: 1; transform: rotateZ(0deg); }
+}
+.anim-wobble { animation: wobble 0.8s forwards; }
