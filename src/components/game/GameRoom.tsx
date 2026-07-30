@@ -34,26 +34,24 @@ export default function GameRoom({
     overflow: "hidden",
   }}>
 
-    {/* back button */}
-    <img
-      src="assets_game/back.svg"
-      className="back"
-      onClick={onBack}
-    />
-    {/* quit button */}
-    <img
-      src="assets_game/quit.svg"
-      className="close"
-      onClick={onQuit}
-    />
+      {/* room header */}
+      <h1 className="roomHeader" style={{left: 151}} > 
+        Room: {room.name} 
+        {room.priv && 
+          <span style={{ color: "#eddebd", fontWeight: "400", fontSize: 16 }}>
+            {" | "}Key: {room.key}
+          </span>
+        }
+      </h1>
 
-    {/* board */}
     <Game 
       room={room}
       sessionId={sessionId}
       onSetUserReady={onSetUserReady}
       onWin={onWin}
       onPeel={onPeel}
+      onBack={onBack}
+      onQuit={onQuit}
     />
 
     {/* BG decor */}

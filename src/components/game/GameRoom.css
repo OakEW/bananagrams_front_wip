@@ -1,22 +1,9 @@
-.back {
+.roomHeader {
   position: absolute;
-  left: 30px;
-  top: 15px;
-  width: 60px;
-  height: 60px;
-  background-color: #eddebd;
-  border-radius: 50%;
-  cursor: pointer;
+  top: 0px;
+  /* left: 151px; */
+  color: #ffbb12;
+  font-size: 20px;
+  font-family: "typewriter";
+  font-weight: 900;
 }
-
-.close {
-  position: absolute;
-  left: 65px;
-  top: 55px;
-  width: 60px;
-  height: 60px;
-  background-color: red;
-  border-radius: 50%;
-  cursor: pointer;
-}
-

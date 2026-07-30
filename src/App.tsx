@@ -158,7 +158,6 @@ export default function App() {
   //       })
   //     );
   //   }
-
   function setUserReady(roomId: number, sessionId: string, ready: boolean) {
     setRooms((prev) =>
       prev.map((r) => {

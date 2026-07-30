@@ -19,23 +19,10 @@ interface GameProps {
   onSetUserReady: (ready: boolean) => void;
   onWin: () =>void;
   onPeel: () => void;
+  onBack: () => void;
+  onQuit: () => void;
 }
 
-// animation restarter
-function animationLoop(ref: React.RefObject<HTMLElement | null>) {
-  useEffect(() => {
-    const id = setInterval(() => {
-      const el = ref.current;
-      if (!el) return;
-      el.classList.remove("anim-pop");
-      el.classList.remove("anim-click");
-      void el.offsetWidth; // force reflow
-      el.classList.add("anim-pop");
-    }, 8000);
-
-    return () => clearInterval(id);
-  }, [ref]);
-}
 const animationClick = (e: React.MouseEvent<HTMLElement>) => {
   const el = e.currentTarget;
   if (!el) return;
@@ -50,7 +37,10 @@ export default function Game({
     sessionId, 
     onSetUserReady, 
     onWin, 
-    onPeel}: GameProps) {
+    onPeel,
+    onBack,
+    onQuit
+  }: GameProps) {
   const [showConfirm, setShowConfirm] = useState(false);
   const currentUser = room.users.find((u) => u.id === sessionId);
   const allReady = room.users.length > 0 && room.users.every((u) => u.isReady);
@@ -58,9 +48,6 @@ export default function Game({
     animationClick(e);
     onSetUserReady(true);
   }
-
-  const bananaRef = useRef<HTMLButtonElement>(null);
-  animationLoop(bananaRef);
 
   function handlePeel(e: React.MouseEvent<HTMLElement>) {
     animationClick(e);
@@ -76,6 +63,28 @@ export default function Game({
   const bananaEnable = currentUser?.tray.length === 0
   const peelEnable = room.bunch.length >= room.users.length
   const dumpEnable = room.bunch.length >= 3
+
+    // animation restarter
+  function animationLoop(ref: React.RefObject<HTMLElement | null>, showConfirm: boolean, bananaEnable:boolean) {
+    useEffect(() => {
+      if (showConfirm || !bananaEnable) return;
+      const id = setInterval(() => {
+        const el = ref.current;
+        if (!el) return;
+        el.classList.remove("anim-pop");
+        el.classList.remove("anim-click");
+        void el.offsetWidth; // force reflow
+        el.classList.add("anim-pop");
+      }, 4000);
+
+      return () => clearInterval(id);
+    }, [ref, showConfirm, bananaEnable]);
+  }
+  const bananaRef = useRef<HTMLButtonElement>(null);
+  animationLoop(bananaRef, showConfirm, bananaEnable);
+
+
+  
   return (
     <>
       {allReady 
@@ -99,15 +108,18 @@ export default function Game({
           </div>
           {/* banana button or peel + dump button*/}
           {!peelEnable && !dumpEnable
-            ? <button ref={bananaRef} className="bananabtn anim-pop"
+            ? <button ref={bananaRef} className="bananabtn"
                 style={{
                   backgroundImage: bananaEnable
                     ? "url('assets_game/bananabttn.svg')"
                     : "url('assets_game/bananabttn0.svg')",
-                  cursor: bananaEnable
-                  ? "pointer" 
-                  : "not-allowed",
+                  cursor: showConfirm
+                  ? "default"
+                  : bananaEnable
+                    ? "pointer"
+                    : "not-allowed",
                 }} 
+                disabled={showConfirm}
                 onClick={bananaEnable ? HandleBanana : undefined } /> 
             : <>
                 <button className="peelbtn anim-show" 
@@ -122,10 +134,10 @@ export default function Game({
           }
           {showConfirm && 
             (<>
-              <button className="confirmbtn anim-show" onClick={onWin}></button>
-              <div className="confirmbtn_text anim-wobble" style={{animationDelay : "0.55s"}} onClick={onWin}></div>
-              <div className="confirmbtn_left anim-wobble" style={{animationDelay : "0.3s"}} onClick={onWin}></div>
-              <div className="confirmbtn_right anim-wobble" style={{animationDelay : "0.4s"}} onClick={onWin}></div>
+              <button className="confirmbtn anim-show-pop" onClick={onWin}></button>
+              <div className="confirmbtn_text anim-wobble" style={{animationDelay : "0.65s"}} onClick={onWin}></div>
+              <div className="confirmbtn_left anim-wobble" style={{animationDelay : "0.4s"}} onClick={onWin}></div>
+              <div className="confirmbtn_right anim-wobble" style={{animationDelay : "0.5s"}} onClick={onWin}></div>
             </>
             )}
         </>
@@ -141,15 +153,24 @@ export default function Game({
         </button>
       )}
 
-      {/* room header */}
-      <h1 className="roomHeader" style={{left: 151}} > 
-        Room: {room.name} 
-        {room.priv && 
-          <span style={{ color: "#eddebd", fontWeight: "400", fontSize: 16 }}>
-            {" | "}Key: {room.key}
-          </span>
-        }
-      </h1>
+    {/* back button */}
+    <img
+      src="assets_game/back.svg"
+      className="back anim-show"
+      onClick={!showConfirm ? onBack : undefined}
+      style={showConfirm ? {cursor: "default"} : undefined }
+    />
+    {/* quit button */}
+    <img
+      src="assets_game/quit.svg"
+      className="close anim-show"
+      onClick={!showConfirm ? onQuit : undefined}
+      style={{
+        animationDelay: "0.2s",
+        cursor: showConfirm ? "default" : "pointer",
+        pointerEvents: showConfirm ? "none" : "auto",
+      }}
+    />
 
       {/* user area */}
       {room.users.map((user, index) => (
@@ -157,7 +178,7 @@ export default function Game({
           key={user.id}
           src={user.isBot ? "assets_users/bot.png" : `assets_users/${user.name}.png`}
           alt={user.name}
-          className="user"
+          className="user anim-show"
           onClick={animationClick}
           style={{ top: 140 + index * 90 }}
           onError={(e) => { e.currentTarget.src = "assets_users/default.png"; }}
