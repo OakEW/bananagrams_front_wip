@@ -45,15 +45,20 @@ const animationClick = (e: React.MouseEvent<HTMLElement>) => {
   el.classList.add("anim-click");
 };
 
-export default function Game({ room, sessionId, onSetUserReady, onWin, onPeel}: GameProps) {
+export default function Game({ 
+    room,
+    sessionId, 
+    onSetUserReady, 
+    onWin, 
+    onPeel}: GameProps) {
   const [showConfirm, setShowConfirm] = useState(false);
   const currentUser = room.users.find((u) => u.id === sessionId);
   const allReady = room.users.length > 0 && room.users.every((u) => u.isReady);
   function onStartGame(e: React.MouseEvent<HTMLElement>) {
     animationClick(e);
     onSetUserReady(true);
-
   }
+
   const bananaRef = useRef<HTMLButtonElement>(null);
   animationLoop(bananaRef);
 
@@ -61,13 +66,16 @@ export default function Game({ room, sessionId, onSetUserReady, onWin, onPeel}: 
     animationClick(e);
     onPeel();
   }
+
   function HandleBanana(e: React.MouseEvent<HTMLElement>) {
     animationClick(e);
     setShowConfirm(true);
   }
 
   // replace with a function to check if this user can call banana
-  const bananaEnable = currentUser?.tray.length === 0 
+  const bananaEnable = currentUser?.tray.length === 0
+  const peelEnable = room.bunch.length >= room.users.length
+  const dumpEnable = room.bunch.length >= 3
   return (
     <>
       {allReady 
@@ -83,12 +91,14 @@ export default function Game({ room, sessionId, onSetUserReady, onWin, onPeel}: 
               <Tile key={i} x={t.x} y={t.y} letter={t.letter} />
             ))}
             {currentUser && currentUser.tray.length > 22 && (
-              <div className="trayOverflow">
+              <div 
+                key={currentUser.tray.length}
+                className="trayOverflow anim-pop" >
                 +{currentUser.tray.length - 22} more
               </div>)}
           </div>
           {/* banana button or peel + dump button*/}
-          {room.bunch.length === 0 
+          {!peelEnable && !dumpEnable
             ? <button ref={bananaRef} className="bananabtn anim-pop"
                 style={{
                   backgroundImage: bananaEnable
@@ -98,10 +108,16 @@ export default function Game({ room, sessionId, onSetUserReady, onWin, onPeel}: 
                   ? "pointer" 
                   : "not-allowed",
                 }} 
-                onClick={bananaEnable ? HandleBanana : undefined} /> 
-            : <> 
-                <button className="peelbtn anim-show" onClick={handlePeel}/>
-                <button className="dumpbtn anim-show" onClick={animationClick} /> 
+                onClick={bananaEnable ? HandleBanana : undefined } /> 
+            : <>
+                <button className="peelbtn anim-show" 
+                  disabled={!peelEnable}
+                  onClick={peelEnable ? handlePeel : undefined }
+                  style={{ cursor: peelEnable ? "pointer" : "not-allowed"}}/>
+                <button className="dumpbtn anim-show" 
+                  disabled={!dumpEnable}
+                  onClick={dumpEnable ? animationClick : undefined }
+                  style={{ cursor: dumpEnable ? "pointer" : "not-allowed"}}/>
               </>
           }
           {showConfirm && 

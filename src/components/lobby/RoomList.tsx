@@ -91,7 +91,11 @@ export default function RoomList({
       >
         {rooms.map((room, index) => (
           <div key={room.id} style={{ position: "absolute", left: index * 100 }}>
-            <RoomButton room={room} onSelect={setSelectedRoomId} />
+            <RoomButton
+              room={room}
+              onSelect={setSelectedRoomId} 
+              sessionId={sessionId}
+            />
           </div>
         ))}
       </div>

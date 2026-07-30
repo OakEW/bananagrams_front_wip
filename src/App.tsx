@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import Leaderboard from "./components/leaderboard/Leaderboard";
 import Chat from "./components/chat/Chat";
@@ -8,9 +8,62 @@ import RoomList from "./components/lobby/RoomList";
 import BgDecor from "./components/lobby/BgDecor";
 import GameRoom from "./components/game/GameRoom";
 // rooms
-import type { Room } from "./types";
+import type { Room, User } from "./types";
 // tile type
 import type { PlacedTile } from "./types";
+// for init bunch
+import { initRoomBunch } from "./components/game/bunch"
+
+const dummyUsers: User[] = [
+  {
+    id: "u1",
+    name: "Alex",
+    isBot: false,
+    tray: [],
+    board: [],
+    isReady: true,
+  },
+  {
+    id: "u2",
+    name: "Bot",
+    isBot: true,
+    tray: [],
+    board: [],
+    isReady: true,
+  },
+  {
+    id: "u3",
+    name: "Caro",
+    isBot: false,
+    tray: [],
+    board: [],
+    isReady: true,
+  },
+  {
+    id: "u4",
+    name: "Dave",
+    isBot: false,
+    tray: [],
+    board: [],
+    isReady: true,
+  },
+  {
+    id: "u5",
+    name: "Ed",
+    isBot: false,
+    tray: [],
+    board: [],
+    isReady: false,
+  },
+  // {
+  //   id: "u6",
+  //   name: "Fred",
+  //   isBot: false,
+  //   tray: [],
+  //   board: [],
+  //   isReady: true,
+  // },
+];
 
 // init rooms from this list
 const initialRooms: Room[] = [
@@ -19,8 +72,10 @@ const initialRooms: Room[] = [
   { id: 3, priv: false, name: "Plantain",    key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1, users: [], bunch: []},
   { id: 4, priv: false, name: "Goldfinger",  key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1, users: [], bunch: []},
   { id: 5, priv: false, name: "Manzano",     key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1, users: [], bunch: []},
-  { id: 6, priv: false, name: "Gros_Michel", key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1, users: [], bunch: []},
+  { id: 6, priv: false, name: "Gros_Michel", key: "", creator: "", peelEnabled: false, botEnabled: true, level: 1, users: dummyUsers, bunch: []},
 ];
+// for testing
+initRoomBunch(initialRooms[5]);
 
 // setting default : peelEnabled, botEnabled
 // room later needs to read their CURRENT values at creation
@@ -90,65 +145,105 @@ export default function App() {
     if (pc <= 4) return 21;
     else return 15;
   }
+  // // **** for testing : SET ALL to READY ****
+  //   function setUserReady(roomId: number, _sessionId: string, _ready: boolean) {
+  //     setRooms((prev) =>
+  //       prev.map((r) => {
+  //         if (r.id !== roomId) return r;
+
+  //         return {
+  //           ...r,
+  //           users: r.users.map((u) => ({ ...u, isReady: true })),
+  //         };
+  //       })
+  //     );
+  //   }
+
   function setUserReady(roomId: number, sessionId: string, ready: boolean) {
     setRooms((prev) =>
       prev.map((r) => {
         if (r.id !== roomId) return r;
 
-        const updatedUsers = r.users.map((u) =>
-          u.id === sessionId ? { ...u, isReady: ready } : u
-        );
-
-        const allNowReady = updatedUsers.length > 0 && updatedUsers.every((u) => u.isReady);
-        const alreadyDealt = updatedUsers.some((u) => u.tray.length > 0);
-
-        // deal tiles once at the moment everyone is ready
-        if (allNowReady && !alreadyDealt) {
-          const bunch = [...r.bunch];
-          const count = tilesPerPlayer(updatedUsers.length);
-
-          const dealtUsers = updatedUsers.map((u) => {
-            const drawn = bunch.splice(0, count); // take `count` letters off the top
-            const tray: PlacedTile[] = drawn.map((letter, i) => ({
-              x: i,
-              y: 0,
-              letter,
-            }));
-            return { ...u, tray };
-          });
-
-          return { ...r, users: dealtUsers, bunch };
-        }
-
-        return { ...r, users: updatedUsers };
+        return {
+          ...r,
+          users: r.users.map((u) =>
+            u.id === sessionId ? { ...u, isReady: ready } : u
+          ),
+        };
       })
     );
   }
+
+  // deal tiles for all users once everyone is ready
+  function dealTiles(roomId: number) {
+    setRooms((prev) =>
+      prev.map((r) => {
+        if (r.id !== roomId) return r;
+
+        const allReady = r.users.length > 0 && r.users.every((u) => u.isReady);
+        const alreadyDealt = r.users.some((u) => u.tray.length > 0);
+        if (!allReady || alreadyDealt) return r;
+
+        const bunch = [...r.bunch];
+        const count = tilesPerPlayer(r.users.length);
+
+        const users = r.users.map((u) => {
+          const drawn = bunch.splice(0, count);
+          const tray: PlacedTile[] = drawn.map((letter, i) => ({
+            x: i,
+            y: 0,
+            letter,
+          }));
+          console.log("delt: ", u.name, " tiles :", tray.map(t => t.letter) );
+          return { ...u, tray };
+        });
+
+        return { ...r, users, bunch };
+      })
+    );
+  }
+
+  const currentRoomAllReady =
+    currentRoom !== null &&
+    currentRoom.users.length > 0 &&
+    currentRoom.users.every((u) => u.isReady);
+
+  const currentRoomAlreadyDealt =
+    currentRoom !== null && currentRoom.users.some((u) => u.tray.length > 0);
+
+  useEffect(() => {
+    if (!currentRoom) return;
+    if (currentRoomAllReady && !currentRoomAlreadyDealt) {
+      dealTiles(currentRoom.id);
+    }
+  }, [currentRoomId, currentRoomAllReady, currentRoomAlreadyDealt]);
+
   // peel button
-  function peelForAll(roomId: number) {
-  setRooms((prev) =>
-    prev.map((r) => {
-      if (r.id !== roomId) return r;
-      if (r.bunch.length === 0) return r; // nothing left to peel
+  function onPeel(roomId: number) {
+    setRooms((prev) =>
+      prev.map((r) => {
+        if (r.id !== roomId) return r;
+        if (r.bunch.length < r.users.length ) return r; // no longer able to distribute 
 
-      const bunch = [...r.bunch];
+        const bunch = [...r.bunch];
+        const updatedUsers = r.users.map((u) => {
+          const letter = bunch.shift(); // take the next letter off the top
+          // console.log("bunch now " + bunch);
+          if (!letter) return u; // bunch ran out mid-loop
 
-      const updatedUsers = r.users.map((u) => {
-        const letter = bunch.shift(); // take the next letter off the top
-        if (!letter) return u; // bunch ran out mid-loop, leave this user as-is
+          const newTile: PlacedTile = {
+            x: u.tray.length, // append to the end of their tray
+            y: 0,
+            letter,
+          };
+          console.log("Peel!: ", u.name, " got: ", newTile.letter);
+          return { ...u, tray: [...u.tray, newTile] };
+        });
 
-        const newTile: PlacedTile = {
-          x: u.tray.length, // append to the end of their tray
-          y: 0,
-          letter,
-        };
-        return { ...u, tray: [...u.tray, newTile] };
-      });
-
-      return { ...r, users: updatedUsers, bunch };
-    })
-  );
-}
+        return { ...r, users: updatedUsers, bunch };
+      })
+    );
+  }
 
   return (
     <div className="background">
@@ -200,7 +295,7 @@ export default function App() {
           onQuit={() => quitRoom(currentRoom.id)}
           onWin={() => resetRoom(currentRoom.id)}
           onSetUserReady={(ready: boolean) => setUserReady(currentRoom.id, sessionId, ready)}
-          onPeel={() => peelForAll(currentRoom.id)}
+          onPeel={() => onPeel(currentRoom.id)}
         />
       )}
     </div>

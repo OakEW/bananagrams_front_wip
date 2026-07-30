@@ -296,6 +296,7 @@
   font-weight: 400;
   font-size: 14px;
   text-align: center;
+  cursor: text;
 }
 
 .room_enter {

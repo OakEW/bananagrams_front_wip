@@ -3,19 +3,23 @@ import type { Room } from "../../types";
 interface RoomButtonProps {
   room: Room;
   onSelect: (roomId: number) => void;
+  sessionId: string;
 }
 
-export default function RoomButton({ room, onSelect }: RoomButtonProps) {
+export default function RoomButton({ room, onSelect, sessionId }: RoomButtonProps) {
   const isSolo = room.id === 1;
   const allNowReady = room.users.length > 0 && room.users.every((u) => u.isReady);
+  const isUserInRoom = room.users.some((u) => u.id === sessionId);
 
   let label = "";
   let style: React.CSSProperties = {};
   if (!isSolo) {
-    if (allNowReady) {
+    if (allNowReady && !isUserInRoom) {
       label = "···";
-      style = { background: "#353535", color: "#757575" };
+      style = { background: "#353535", color: "#757575", cursor: "not-allowed"};
     } else if (room.users.length === 6) {
+      if (!isUserInRoom)
+        style = { background: "#353535", color: "#757575", cursor: "not-allowed"};
       label = "f";
     } else if (room.users.length === 0) {
       label = "+";
@@ -36,7 +40,7 @@ export default function RoomButton({ room, onSelect }: RoomButtonProps) {
       <div
         className="room_text"
         style={{
-          color: room.users.length > 0 ? "#ffbb12" : "#eddebd",
+          color: isUserInRoom? "#ffbb12" : "#eddebd",
           fontFamily: "'typewriter', sans-serif",
           fontWeight: 900,
           textAlign: "center",

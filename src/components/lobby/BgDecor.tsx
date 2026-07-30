@@ -58,12 +58,12 @@ export default function BgDecor() {
         <a href="https://www.google.com/" target="_blank" rel="noopener noreferrer">
           <img src="assets_home/cre3.svg" style={{ position: "absolute", height: 30, left: 170, top: 7, zIndex: 10 }} />
         </a>
-        <a href="https://www.google.com/" target="_blank" rel="noopener noreferrer">
+        <a href="https://github.com/palma-t" target="_blank" rel="noopener noreferrer">
           <img src="assets_home/cre4.svg" style={{ position: "absolute", height: 30, left: 210, top: 7, zIndex: 10 }} />
         </a>
-        <a href="https://www.google.com/" target="_blank" rel="noopener noreferrer">
+        {/* <a href="https://www.google.com/" target="_blank" rel="noopener noreferrer">
           <img src="assets_home/cre5.svg" style={{ position: "absolute", height: 30, left: 250, top: 7, zIndex: 10 }} />
-        </a>
+        </a> */}
       </div>
 
       <img ref={bananaRef} src="assets_home/banana.svg" className="banana anim-rotate" style={{ animationDelay: "0.18s", zIndex: 10 }} />
