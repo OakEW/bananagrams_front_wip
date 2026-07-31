@@ -41,7 +41,7 @@ const LETTER_BAG_EN = [
   ..."ZZ",            //2
 ];
 
-function shuffle(array: string[]): string[] {
+export function shuffle(array: string[]): string[] {
   const result = [...array];
 
   for (let i = result.length - 1; i > 0; i--) {

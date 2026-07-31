@@ -3,6 +3,7 @@ export interface PlacedTile {
   x: number;
   y: number;
   letter: string;
+  id: string;
 }
 
 // user data / player

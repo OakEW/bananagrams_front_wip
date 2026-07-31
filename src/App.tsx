@@ -12,7 +12,7 @@ import type { Room, User } from "./types";
 // tile type
 import type { PlacedTile } from "./types";
 // for init bunch
-import { initRoomBunch } from "./components/game/bunch"
+import { initRoomBunch, shuffle } from "./components/game/bunch"
 
 const dummyUsers: User[] = [
   {
@@ -142,36 +142,36 @@ export default function App() {
 
     // init tile count
   function tilesPerPlayer(pc: number): number {
-    if (pc <= 4) return 21;
+    if (pc <= 4) return 2;
     else return 15;
   }
-  // // **** for testing : SET ALL to READY ****
-  //   function setUserReady(roomId: number, _sessionId: string, _ready: boolean) {
-  //     setRooms((prev) =>
-  //       prev.map((r) => {
-  //         if (r.id !== roomId) return r;
+  // **** for testing : SET ALL to READY ****
+    function setUserReady(roomId: number, _sessionId: string, _ready: boolean) {
+      setRooms((prev) =>
+        prev.map((r) => {
+          if (r.id !== roomId) return r;
 
-  //         return {
-  //           ...r,
-  //           users: r.users.map((u) => ({ ...u, isReady: true })),
-  //         };
-  //       })
-  //     );
-  //   }
-  function setUserReady(roomId: number, sessionId: string, ready: boolean) {
-    setRooms((prev) =>
-      prev.map((r) => {
-        if (r.id !== roomId) return r;
+          return {
+            ...r,
+            users: r.users.map((u) => ({ ...u, isReady: true })),
+          };
+        })
+      );
+    }
+  // function setUserReady(roomId: number, sessionId: string, ready: boolean) {
+  //   setRooms((prev) =>
+  //     prev.map((r) => {
+  //       if (r.id !== roomId) return r;
 
-        return {
-          ...r,
-          users: r.users.map((u) =>
-            u.id === sessionId ? { ...u, isReady: ready } : u
-          ),
-        };
-      })
-    );
-  }
+  //       return {
+  //         ...r,
+  //         users: r.users.map((u) =>
+  //           u.id === sessionId ? { ...u, isReady: ready } : u
+  //         ),
+  //       };
+  //     })
+  //   );
+  // }
 
   // deal tiles for all users once everyone is ready
   function dealTiles(roomId: number) {
@@ -192,6 +192,7 @@ export default function App() {
             x: i,
             y: 0,
             letter,
+            id: crypto.randomUUID(),
           }));
           console.log("delt: ", u.name, " tiles :", tray.map(t => t.letter) );
           return { ...u, tray };
@@ -234,12 +235,140 @@ export default function App() {
             x: u.tray.length, // append to the end of their tray
             y: 0,
             letter,
+            id: crypto.randomUUID(),
           };
           console.log("Peel!: ", u.name, " got: ", newTile.letter);
           return { ...u, tray: [...u.tray, newTile] };
         });
 
         return { ...r, users: updatedUsers, bunch };
+      })
+    );
+  }
+
+  // drop on Dump
+  function onDump(roomId: number, tileId: string) {
+    setRooms((prev) =>
+      prev.map((r) => {
+        if (r.id !== roomId) return r;
+        if (r.bunch.length < 3) return r; // not enough left 
+
+        const userIndex = r.users.findIndex((u) => u.id === sessionId);
+        if (userIndex === -1) return r;
+
+        const user = r.users[userIndex];
+        //search tray and board for ddraged tile
+        const trayTile = user.tray.find((t) => t.id === tileId);
+        const boardTile = trayTile ? undefined : user.board.find((t) => t.id === tileId);
+        const dumpedTile = trayTile ?? boardTile;
+        if (!dumpedTile) return r
+
+        // return the letter to the bunch and shuffle it back in
+        const bunch = shuffle([...r.bunch, dumpedTile.letter]);
+        const drawn = bunch.splice(0, 3);
+        const newTiles: PlacedTile[] = drawn.map((letter) => ({
+          x: 0,
+          y: 0,
+          letter,
+          id: crypto.randomUUID(),
+        }));
+
+        const newTray: PlacedTile[] = (
+          trayTile ? user.tray.filter((t) =>t.id !== tileId) :  user.tray
+        )
+          .concat(newTiles)
+          .map((t,i) => ({ ...t, x: i }));
+
+        const newBoard: PlacedTile[] = boardTile
+          ? user.board.filter((t) => t.id !== tileId)
+          : user.board;
+
+        const updatedUsers = [...r.users];
+        updatedUsers[userIndex] = { ...user, tray: newTray, board: newBoard };
+
+        console.log("Dump: ", user.name, " dumped ", dumpedTile.letter, " for ", drawn);
+        console.log("bunch reshuffled to :", bunch);
+        return { ...r, users: updatedUsers, bunch };
+      })
+    );
+  }
+  // drop on Board
+  function onPlacingBoard(roomId: number, tileId: string, x: number, y: number) {
+    setRooms((prev) =>
+      prev.map((r) => {
+        if (x < 0 || x > 29 || y < 0 || y > 16) return r;
+        if (r.id !== roomId) return r;
+
+        const userIndex = r.users.findIndex((u) => u.id === sessionId);
+        if (userIndex === -1) return r;
+
+        const user = r.users[userIndex];
+        //search tray and board for ddraged tile
+        const trayTile = user.tray.find((t) => t.id === tileId);
+        const boardTile = trayTile ? undefined : user.board.find((t) => t.id === tileId);
+        const pickedTile = trayTile ?? boardTile;
+        if (!pickedTile) return r
+
+        const newTray: PlacedTile[] =
+          trayTile 
+          ? user.tray.filter((t) =>t.id !== tileId) 
+          : user.tray
+
+        const boardWithoutTile: PlacedTile[] = 
+          boardTile
+          ? user.board.filter((t) => t.id !== tileId)
+          : user.board;
+        
+        const newBoard = boardWithoutTile.concat({
+          ...pickedTile,
+          x:x,
+          y:y,
+        });
+
+        const updatedUsers = [...r.users];
+        updatedUsers[userIndex] = { ...user, tray: newTray, board: newBoard };
+
+        console.log(user.name, " placed tile: ", pickedTile.letter, " to ", x, " * ", y);
+        return { ...r, users: updatedUsers };
+      })
+    );
+  }
+
+  // drop on Tray
+  function onPlacingTray(roomId: number, tileId: string) {
+    setRooms((prev) =>
+      prev.map((r) => {
+        if (r.id !== roomId) return r;
+
+        const userIndex = r.users.findIndex((u) => u.id === sessionId);
+        if (userIndex === -1) return r;
+
+        const user = r.users[userIndex];
+        //search tray and board for ddraged tile
+        const trayTile = user.tray.find((t) => t.id === tileId);
+        const boardTile = trayTile ? undefined : user.board.find((t) => t.id === tileId);
+        const pickedTile = trayTile ?? boardTile;
+        if (!pickedTile) return r
+
+        const trayWithoutTile: PlacedTile[] =
+          trayTile 
+          ? user.tray.filter((t) =>t.id !== tileId) 
+          : user.tray
+
+        const newBoard: PlacedTile[] = 
+          boardTile
+          ? user.board.filter((t) => t.id !== tileId)
+          : user.board;
+        
+        const newTray = [...trayWithoutTile, pickedTile].map((t, i) => ({
+        ...t, x: i, y: 0,
+       }));
+
+        const updatedUsers = [...r.users];
+        updatedUsers[userIndex] = { ...user, tray: newTray, board: newBoard };
+
+        console.log(user.name, " placed tile: ", pickedTile.letter, " to the end of tray");
+        return { ...r, users: updatedUsers };
       })
     );
   }
@@ -295,6 +424,9 @@ export default function App() {
           onWin={() => resetRoom(currentRoom.id)}
           onSetUserReady={(ready: boolean) => setUserReady(currentRoom.id, sessionId, ready)}
           onPeel={() => onPeel(currentRoom.id)}
+          onDump={(tileId: string) => onDump(currentRoom.id, tileId)}
+          onPlacingBoard={(tileId: string, x: number, y: number) => onPlacingBoard(currentRoom.id, tileId, x, y)}
+          onPlacingTray={(tileId: string) => onPlacingTray(currentRoom.id, tileId)}
         />
       )}
     </div>

@@ -11,6 +11,9 @@ interface GameRoomProps {
   onWin: () => void;
   onSetUserReady: (ready: boolean) => void;
   onPeel: () => void;
+  onDump: (tileId: string) => void;
+  onPlacingBoard: (tileId: string, x: number, y: number) => void;
+  onPlacingTray: (tileId: string) => void;
 }
 
 export default function GameRoom({
@@ -21,6 +24,9 @@ export default function GameRoom({
   onWin,
   onSetUserReady,
   onPeel,
+  onDump,
+  onPlacingBoard,
+  onPlacingTray,
 }: GameRoomProps) {
   return (
   // BG
@@ -50,6 +56,9 @@ export default function GameRoom({
       onSetUserReady={onSetUserReady}
       onWin={onWin}
       onPeel={onPeel}
+      onDump={onDump}
+      onPlacingBoard={onPlacingBoard}
+      onPlacingTray={onPlacingTray}
       onBack={onBack}
       onQuit={onQuit}
     />
