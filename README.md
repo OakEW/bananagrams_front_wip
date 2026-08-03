@@ -64,10 +64,8 @@ Tile.tsx
 ```
 
 ## WIP
-- onDump
-- drag and drop
-- winning condition check (board check, fetch words)
-- Peel! Dump! Banana! visualization
+- peel protection (valid English words check)
+- bot (AI ?)
 - leaderboard / game history
 - login verification (now is a dummy lives in LoginForm.tsx)
 - user info display / chat (to be decided)
