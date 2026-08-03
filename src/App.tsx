@@ -13,6 +13,8 @@ import type { Room, User } from "./types";
 import type { PlacedTile } from "./types";
 // for init bunch
 import { initRoomBunch, shuffle } from "./components/game/bunch"
+// game logic
+// import { checkAllTilesConnected, spellCheck } from "./components/game/gameLogic";
 
 const dummyUsers: User[] = [
   {
@@ -67,20 +69,20 @@ const dummyUsers: User[] = [
 
 // init rooms from this list
 const initialRooms: Room[] = [
-  { id: 1, priv: false, name: "Solo",        key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1, users: [], bunch: []},
-  { id: 2, priv: false, name: "Cavendish",   key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1, users: [], bunch: []},
-  { id: 3, priv: false, name: "Plantain",    key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1, users: [], bunch: []},
-  { id: 4, priv: false, name: "Goldfinger",  key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1, users: [], bunch: []},
-  { id: 5, priv: false, name: "Manzano",     key: "", creator: "", peelEnabled: false, botEnabled: false, level: 1, users: [], bunch: []},
-  { id: 6, priv: false, name: "Gros_Michel", key: "", creator: "", peelEnabled: false, botEnabled: true, level: 1, users: dummyUsers, bunch: []},
+  { id: 1, priv: false, name: "Solo",        key: "", creator: "", peelCheckEnabled: false, botEnabled: false, level: 1, users: [], bunch: []},
+  { id: 2, priv: false, name: "Cavendish",   key: "", creator: "", peelCheckEnabled: false, botEnabled: false, level: 1, users: [], bunch: []},
+  { id: 3, priv: false, name: "Plantain",    key: "", creator: "", peelCheckEnabled: false, botEnabled: false, level: 1, users: [], bunch: []},
+  { id: 4, priv: false, name: "Goldfinger",  key: "", creator: "", peelCheckEnabled: false, botEnabled: false, level: 1, users: [], bunch: []},
+  { id: 5, priv: false, name: "Manzano",     key: "", creator: "", peelCheckEnabled: false, botEnabled: false, level: 1, users: [], bunch: []},
+  { id: 6, priv: false, name: "Gros_Michel", key: "", creator: "", peelCheckEnabled: true, botEnabled: true, level: 1, users: dummyUsers, bunch: []},
 ];
 // for testing
 initRoomBunch(initialRooms[5]);
 
-// setting default : peelEnabled, botEnabled
+// setting default : peelCheckEnabled, botEnabled
 // room later needs to read their CURRENT values at creation
 export default function App() {
-  const [peelEnabled, setPeelEnabled] = useState(true);
+  const [peelCheckEnabled, setpeelCheckEnabled] = useState(true);
   const [botEnabled, setBotEnabled] = useState(true);
   const [level, setLevel] = useState(1);
   const [userName, setUserName] = useState("");
@@ -113,7 +115,7 @@ export default function App() {
         ...r,
         users: newUsers,
         ...(isNowEmpty || isBotOnly 
-            ? { peelEnabled: false, botEnabled: false, level: 1, priv: false, key: "",creator: "", users: [], bunch: []} 
+            ? { peelCheckEnabled: false, botEnabled: false, level: 1, priv: false, key: "",creator: "", users: [], bunch: []} 
             : {}),
       };
     }));
@@ -129,7 +131,7 @@ export default function App() {
 
         return {
           ...r,
-          peelEnabled: false, botEnabled: false, level: 1, priv: false, key: "",creator: "", users: [], bunch: []};
+          peelCheckEnabled: false, botEnabled: false, level: 1, priv: false, key: "",creator: "", users: [], bunch: []};
       })
     );
     setCurrentRoomId(null);
@@ -142,7 +144,7 @@ export default function App() {
 
     // init tile count
   function tilesPerPlayer(pc: number): number {
-    if (pc <= 4) return 2;
+    if (pc <= 4) return 21;
     else return 15;
   }
   // **** for testing : SET ALL to READY ****
@@ -377,8 +379,8 @@ export default function App() {
     <div className="background">
       <Leaderboard />
       <Settings
-        peelEnabled={peelEnabled}
-        onTogglePeel={() => setPeelEnabled(!peelEnabled)}
+        peelCheckEnabled={peelCheckEnabled}
+        onTogglePeel={() => setpeelCheckEnabled(!peelCheckEnabled)}
         botEnabled={botEnabled}
         onToggleBot={() => setBotEnabled(!botEnabled)}
         level={level}
@@ -399,7 +401,7 @@ export default function App() {
         rooms={rooms}
         setRooms={setRooms}
         initialRooms={initialRooms}
-        peelEnabled={peelEnabled} 
+        peelCheckEnabled={peelCheckEnabled} 
         botEnabled={botEnabled} 
         level={level} 
         isLogin={isLogin}

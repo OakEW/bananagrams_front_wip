@@ -90,11 +90,10 @@
 
 .bananabtn {
   position: absolute;
-  right: 16px;
-  top: 32px;
-  width: 313px;
-  height: 92px;
-  scale: 94%;
+  right: 30px;
+  top: -30px;
+  width: 135px;
+  height: 144px;
   border: none;
   outline: none;
   appearance: none;

@@ -1,5 +1,5 @@
 interface SettingsProps {
-  peelEnabled: boolean;
+  peelCheckEnabled: boolean;
   onTogglePeel: () => void;
   botEnabled: boolean;
   onToggleBot: () => void;
@@ -10,7 +10,7 @@ interface SettingsProps {
 // Settings no longer owns ANY state 
 // every value and every click handler comes in as props from App
 export default function Settings({
-  peelEnabled,
+  peelCheckEnabled,
   onTogglePeel,
   botEnabled,
   onToggleBot,
@@ -20,7 +20,7 @@ export default function Settings({
   return (
     <div className="settings">
       <img
-        src={peelEnabled ? "assets_home/peel1.svg" : "assets_home/peel0.svg"}
+        src={peelCheckEnabled ? "assets_home/peel1.svg" : "assets_home/peel0.svg"}
         className="peel anim-poppop"
         style={{ animationDelay: "1.0s" }}
         onClick={onTogglePeel}

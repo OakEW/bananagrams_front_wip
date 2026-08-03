@@ -56,7 +56,7 @@ export default function RoomButton({ room, onSelect, sessionId }: RoomButtonProp
       {room.priv && (
         <img src="assets_home/private.svg" className="room_lock" />
       )}
-      {room.peelEnabled && (
+      {room.peelCheckEnabled && (
         <img src="assets_home/peel1.svg" className="room_peel" />
       )}
       {room.botEnabled && (

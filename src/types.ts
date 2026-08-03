@@ -24,7 +24,7 @@ export interface Room {
   key: string;      // room key
   creator: string;  // room creator username
 
-  peelEnabled: boolean;
+  peelCheckEnabled: boolean;
   botEnabled: boolean;
   level: number;
 

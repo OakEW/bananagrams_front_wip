@@ -44,10 +44,12 @@ export default function GameRoom({
       <h1 className="roomHeader" style={{left: 151}} > 
         Room: {room.name} 
         {room.priv && 
-          <span style={{ color: "#eddebd", fontWeight: "400", fontSize: 16 }}>
-            {" | "}Key: {room.key}
+          <span style={{ color: "#fbd789", fontWeight: "400", fontSize: 16 }}>
+            {" >< "}Key: {room.key}
           </span>
         }
+        <span style={{color: "#eddebd", fontWeight: "400", fontSize: 16}} >
+        {" >< "}{room.bunch.length} tiles remains </span>
       </h1>
 
     <Game 

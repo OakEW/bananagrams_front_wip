@@ -29,4 +29,8 @@
   z-index: 10;
   cursor: grab;
 }
+.tile:hover {
+  background-image: url(../../../public/assets_game/tile-hover.svg);
+  z-index: 20;
+}
 

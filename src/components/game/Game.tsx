@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import "./Game.css";
 import Tile from "./Tile";
 import type { Room } from "../../types";
+import { checkAllTilesConnected, fetchWords, spellCheck } from "./gameLogic";
 
 // board matrix
 // border size : 15px
@@ -97,10 +98,51 @@ export default function Game({
     onPlacingTray(id);
   }
 
-  // replace with a function to check if this user can call banana
-  const bananaEnable = currentUser?.tray.length === 0
-  const peelEnable = room.bunch.length >= room.users.length
-  const dumpEnable = room.bunch.length >= 3
+
+  // check if tray is empty
+  // check if there's enough tiles to deal (not less than user.length)
+  // check if tiles are all connected
+  function checkPeelEnable(): boolean {
+    const firstCheck = room.bunch.length >= room.users.length && currentUser?.tray.length === 0;
+    if (firstCheck === false)
+      return false;
+    return checkAllTilesConnected(currentUser?.board ?? []);
+  }
+  const peelEnable: boolean = checkPeelEnable();
+
+
+  // do spell check here (peelCheckEnabled)
+  const tileValidity = new Map<string, boolean>(); // key: tileId
+  if (currentUser && room.peelCheckEnabled) {
+    const entries = fetchWords(currentUser.board);
+    for (const entry of entries) {
+      const valid = spellCheck(entry.word);
+      for (const pos of entry.tiles) {
+        const tile = currentUser.board.find((t) => t.x === pos.x && t.y === pos.y);
+        if (!tile) continue;
+        const existing = tileValidity.get(tile.id);
+        tileValidity.set(tile.id, existing === false ? false : valid);
+      }
+    }
+  }
+
+  // check if tray is empty
+  // check if tiles are all connected
+  function checkBananaEnable(): boolean {
+    if (currentUser?.tray.length !== 0)
+      return false;
+    if (checkAllTilesConnected(currentUser?.board ?? []) === false)
+      return false;
+    // if peelCheckEnabled is off , slip spell check
+    if (room.peelCheckEnabled === false) 
+      return true;
+    // spell check
+    return [...tileValidity.values()].every((v) => v === true);
+  }
+  const bananaEnable: boolean = checkBananaEnable();
+
+  // dump only works for at least 3 tiles in bunch
+  const dumpEnable: boolean = room.bunch.length >= 3
 
     // animation restarter
   function animationLoop(ref: React.RefObject<HTMLElement | null>, showWin: boolean, bananaEnable:boolean) {
@@ -110,6 +152,7 @@ export default function Game({
         const el = ref.current;
         if (!el) return;
         el.classList.remove("anim-pop");
+        el.classList.remove("anim-show-pop");
         el.classList.remove("anim-click");
         void el.offsetWidth; // force reflow
         el.classList.add("anim-pop");
@@ -134,8 +177,9 @@ export default function Game({
             onDragOver={(e) => { e.preventDefault(); }}
             onDrop={handlePlacingBoard}
           >
-            {currentUser?.board.map((t, i) => (
+            {currentUser?.board.map((t) => (
               <Tile key={t.id} x={t.x} y={t.y} letter={t.letter} id={t.id}
+                valid={tileValidity.get(t.id)}
                 draggable={!showQuitConfirm && !showWin}
                 onDragStart={(e) => {
                   e.dataTransfer.setData("text/plain", String(t.id));
@@ -163,9 +207,9 @@ export default function Game({
                 +{currentUser.tray.length - 22} more
               </div>)}
           </div>
-          {/* banana button or peel + dump button*/}
-          {!peelEnable && !dumpEnable
-            ? <button ref={bananaRef} className="bananabtn"
+          {/* banana button or peel button*/}
+          {!peelEnable && room.bunch.length < room.users.length
+            ? <button ref={bananaRef} className="bananabtn anim-show-pop"
                 style={{
                   backgroundImage: bananaEnable
                     ? "url('assets_game/bananabttn.svg')"
@@ -176,35 +220,34 @@ export default function Game({
                     ? "pointer"
                     : "not-allowed",
                 }} 
-                disabled={showWin}
-                onClick={bananaEnable ? HandleBanana : undefined } /> 
-            : <>
-                {/* peel button */}
-                <button className="peelbtn anim-show" 
-                  disabled={!peelEnable}
-                  onClick={peelEnable && !showQuitConfirm ? handlePeel : undefined }
-                  style={{ 
-                    cursor: showQuitConfirm ?  "default" :
-                      peelEnable ? "pointer" : "not-allowed",
-                    backgroundImage: peelEnable
-                    ? "url('assets_game/peelbttn.svg')"
-                    : "url('assets_game/peelbttn0.svg')"
-                  }}/>
-
-                {/* dump erea */}
-                <button className="dumpbtn anim-show" 
-                  disabled={!dumpEnable}
-                  onDragOver={(e) => { if (dumpEnable) e.preventDefault(); }}
-                  onDrop={dumpEnable ? handleDump : undefined}
-                  style={{ 
-                    cursor: showQuitConfirm ?  "default" :
-                      dumpEnable ? "copy" : "not-allowed",
-                    backgroundImage: dumpEnable
-                    ? "url('assets_game/dumpbttn.svg')"
-                    : "url('assets_game/dumpbttn0.svg')"
-                  }}/>
-              </>
+                disabled={showWin || !bananaEnable}
+                onClick={bananaEnable ? HandleBanana : undefined } 
+              /> 
+            : <button className="peelbtn anim-show" 
+                disabled={!peelEnable}
+                onClick={peelEnable && !showQuitConfirm ? handlePeel : undefined }
+                style={{ 
+                  cursor: showQuitConfirm ?  "default" :
+                    peelEnable ? "pointer" : "not-allowed",
+                  backgroundImage: peelEnable
+                  ? "url('assets_game/peelbttn.svg')"
+                  : "url('assets_game/peelbttn0.svg')"
+                }}
+              />
           }
+          {/* dump button */}
+          <button className="dumpbtn anim-show" 
+            disabled={!dumpEnable}
+            onDragOver={(e) => { if (dumpEnable) e.preventDefault(); }}
+            onDrop={dumpEnable ? handleDump : undefined}
+            style={{ 
+              cursor: showQuitConfirm ?  "default" :
+                dumpEnable ? "copy" : "not-allowed",
+              backgroundImage: dumpEnable
+              ? "url('assets_game/dumpbttn.svg')"
+              : "url('assets_game/dumpbttn0.svg')"
+            }}
+          />
           {showWin && 
             (<>
               <button className="winbtn anim-show-pop" onClick={onWin}></button>

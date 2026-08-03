@@ -10,7 +10,7 @@ interface RoomListProps {
   rooms: Room[];
   setRooms: React.Dispatch<React.SetStateAction<Room[]>>;
   initialRooms: Room[];
-  peelEnabled: boolean;
+  peelCheckEnabled: boolean;
   botEnabled: boolean;
   level: number;
   isLogin: boolean;
@@ -23,7 +23,7 @@ export default function RoomList({
     rooms,
     setRooms,
     initialRooms,
-    peelEnabled, 
+    peelCheckEnabled, 
     botEnabled, 
     level, 
     isLogin,
@@ -72,7 +72,7 @@ export default function RoomList({
     ...room,
     priv: wasEmpty && key !== "" ? true : room.priv,
     users: [...room.users, ...newUsers],
-    ...(wasEmpty ? { peelEnabled, botEnabled, level, key, creator: displayName } : {}),
+    ...(wasEmpty ? { peelCheckEnabled, botEnabled, level, key, creator: displayName } : {}),
   };
   if (wasEmpty) {
     if (updatedRoom.priv)

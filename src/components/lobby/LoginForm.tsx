@@ -59,6 +59,12 @@ export default function LoginForm({
     setInputUserName("");
     setInputPassWord("");
   }
+  const fontSize =
+  userName.length > 22
+    ? 18
+    : userName.length > 15
+    ? 23
+    : 32;
 
   return (
     <>
@@ -112,7 +118,23 @@ export default function LoginForm({
       <div
         className="welcome anim-poppop">
           <p style={{position: "absolute", left: 35, top: -14, fontWeight: 900, fontSize: 24, lineHeight: "26px", color: "#1d1d1b"}}>
-            Hello!<br /><span style={{ fontSize: 34, color: "#094f39"}}>{userName}</span></p>
+            Hello!<br />
+            <span
+              style={{
+                display: "inline-block",
+                maxWidth: "250px",
+                height: 40,
+                fontSize: fontSize,
+                color: "#094f39",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+              title={userName}
+            >
+              {userName}
+            </span>
+          </p>
           <img
             src="assets_home/quit.svg"
             className="quit-btn"
